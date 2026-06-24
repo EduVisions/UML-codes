@@ -1,0 +1,63 @@
+@startuml
+
+actor/ "Universidad / administrador institucional" <<Business Actor>> as Admin
+actor/ "Docente" <<Business Actor>> as Docente
+actor/ "Estudiante" <<Business Actor>> as Estudiante
+
+rectangle "Modelo de Casos de Uso del Negocio - EduVerify" {
+    
+    usecase/ "Contratar licencia" as UC1
+    usecase/ "Configurar institucion educativa" as UC2
+    usecase/ "Gestionar usuarios institucionales" as UC3
+
+    usecase/ "Crear examen supervisado" as UC4
+    usecase/ "Programar examen supervisado" as UC5
+    usecase/ "Gestionar alertas e incidencias" as UC9
+    usecase/ "Visualizar dashboard de supervision" as UC15
+    usecase/ "Reportar plagio de estudiante" as UC11
+    usecase/ "Visualizar evidencia de incidencia" as UC17
+    usecase/ "Generar reporte de incidencias" as UC12
+
+
+    usecase/ "Rendir examen supervisado" as UC6
+    usecase/ "Validar identidad constantemente con cámara" as UC7
+    usecase/ "Consultar resultados del examen" as UC14
+    usecase/ "Consultar alertas e incidencias" as UC8
+    usecase/ "Reportar error de incidencia" as UC10
+    
+}
+
+Admin --> UC1
+Admin --> UC2
+
+Docente --> UC4
+Docente --> UC15
+
+Estudiante --> UC6
+Estudiante --> UC14
+Estudiante --> UC8
+
+UC2 --> UC3 : <<include>>
+UC4 --> UC5 : <<include>>
+UC6 --> UC7 : <<include>>
+UC15 --> UC17 : <<include>>
+UC15 --> UC9 : <<extend>>
+UC8 --> UC10 : <<extend>>
+UC17 --> UC11 : <<extend>>
+UC15 --> UC12 : <<extend>>
+
+skinparam usecase {
+  BackgroundColor #C7F4FF
+  BorderColor #7A1631
+  StereotypeFontColor #2E7D32
+}
+skinparam actor {
+  BackgroundColor #C7F4FF
+  BorderColor #7A1631
+  StereotypeFontColor #2E7D32
+}
+skinparam Arrow {
+  Color #7A1631
+}
+
+@enduml
