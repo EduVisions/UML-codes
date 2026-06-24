@@ -1,0 +1,34 @@
+@startuml "Business Case: Hotel Pricing"
+left to right direction
+
+actor/ "Owner" <<Business Worker>> as Owner
+actor/ "Channel Partner" <<Business Actor>> as Partner
+actor/ "Agency" <<Business Actor>> as Agency
+
+usecase/ "Manage Pricing\nPolicy" as BUC1
+usecase/ "Query Hotel\nPrices" as BUC2
+usecase/ "Manage Hotel\nOperations" as BUC3
+usecase/ "Ensure Access\nand Compliance" as BUC4
+usecase/ "Publish Prices\nto Channels" as BUC5
+
+Owner --> BUC1
+Owner --> BUC3
+Owner --> BUC4
+
+BUC1 --> BUC5 : <<include>>
+BUC5 -> Partner : <<publish>>
+
+Agency --> BUC2
+
+skinparam usecase {
+  BackgroundColor #C7F4FF
+  BorderColor #7A1631
+}
+skinparam actor {
+  BackgroundColor #C7F4FF
+  BorderColor #7A1631
+}
+skinparam Arrow {
+  Color #7A1631
+}
+@enduml

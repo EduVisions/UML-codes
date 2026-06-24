@@ -1,0 +1,61 @@
+@startuml ""
+skinparam linetype ortho
+
+node "Browser" as Browser
+node "CDN" as CDN
+node "API Gateway" as ApiGateway
+
+node "Lending AWS ECS" as LendingContainer {
+  artifact "LendingMicroserviceJAR" {
+    component "Interface" as LendingInterface
+    component "Application Service" as LendingApplicationService
+    component "Domain Model" as LendingDomainModel
+    component "Infrastructure" as LendingInfrastructure
+  }
+}
+
+node "Catalog AWS ECS" as CatalogContainer {
+  artifact "CatalogMicroserviceJAR" {
+    component "Interface" as CatalogInterface
+    component "Application Service" as CatalogApplicationService
+    component "Domain Model" as CatalogDomainModel
+    component "Infrastructure" as CatalogInfrastructure
+  }
+}
+
+node "IAM AWS ECS" as IAMContainer {
+  artifact "IAMMicroserviceJAR" {
+    component "Interface" as IdentityInterface
+    component "Application Service" as IdentityApplicationService
+    component "Domain Model" as IdentityDomainModel
+    component "Infrastructure" as IdentityInfrastructure
+  }
+}
+
+node "Notification AWS ECS" as NotificationContainer {
+  artifact "NotificationMicroserviceJAR" {
+    artifact "Interface" as NotificationInterface
+    artifact "Application Service" as NotificationApplicationService
+    artifact "Domain Model" as NotificationDomainModel
+    artifact "Infrastructure" as NotificationInfrastructure
+  }
+}
+
+database "Lending" as RelationalDatabaseLending
+database "Catalog" as RelationalDatabaseCatalog
+cloud "Identity Provider" as IdentityProvider
+cloud "SendGrid" as SendGrid
+
+Browser --> CDN : HTTPS
+Browser --> ApiGateway : HTTPS
+
+ApiGateway --> LendingContainer : HTTPS
+ApiGateway --> CatalogContainer : HTTPS
+ApiGateway --> IAMContainer : HTTPS
+ApiGateway --> NotificationContainer : HTTPS
+
+LendingContainer --> RelationalDatabaseLending : TCP/IP
+CatalogContainer --> RelationalDatabaseCatalog : TCP/IP
+IAMContainer --> IdentityProvider : HTTPS
+NotificationContainer --> SendGrid : HTTPS
+@enduml

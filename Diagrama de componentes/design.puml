@@ -1,0 +1,64 @@
+@startuml ""
+skinparam componentStyle uml2
+skinparam linetype ortho
+left to right direction
+
+interface "Contract" as Contract
+
+component "RESTful API" as API {
+  component "Lending Bounded Context" as BC_Lending {
+    component "Interface Layer" as L_Interface
+    component "Application Layer" as L_Application
+    component "Domain Layer" as L_Domain
+    component "Infrastructure Layer" as L_Infrastructure
+  }
+
+  component "Catalog Bounded Context" as BC_Catalog {
+    component "Interface Layer" as C_Interface
+    component "Application Layer" as C_Application
+    component "Domain Layer" as C_Domain
+    component "Infrastructure Layer" as C_Infrastructure
+  }
+
+  component "Identity Bounded Context" as BC_Identity {
+    component "Interface Layer" as I_Interface
+    component "Application Layer" as I_Application
+    component "Domain Layer" as I_Domain
+    component "Infrastructure Layer" as I_Infrastructure
+  }
+
+  component "Notification Bounded Context" as BC_Notification {
+    component "Interface Layer" as N_Interface
+    component "Application Layer" as N_Application
+    component "Domain Layer" as N_Domain
+    component "Infrastructure Layer" as N_Infrastructure
+  }
+}
+database "Relational Database" as RelationalDatabase <<external>>
+component "Identity Provider" as IdentityProvider <<external>>
+component "SendGrid" as SendGrid <<external>>
+
+API --> Contract
+
+L_Interface ..> L_Application
+L_Application ..> L_Domain
+L_Application ..> L_Infrastructure
+
+C_Interface ..> C_Application
+C_Application ..> C_Domain
+C_Application ..> C_Infrastructure
+
+I_Interface ..> I_Application
+I_Application ..> I_Domain
+I_Application ..> I_Infrastructure
+
+N_Interface ..> N_Application
+N_Application ..> N_Domain
+N_Application ..> N_Infrastructure
+
+L_Infrastructure ..> RelationalDatabase
+C_Infrastructure ..> RelationalDatabase
+I_Infrastructure ..> IdentityProvider
+N_Infrastructure ..> SendGrid
+
+@enduml

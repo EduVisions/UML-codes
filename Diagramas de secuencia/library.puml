@@ -1,0 +1,43 @@
+@startuml ""
+
+actor Patron
+boundary "UI Front Controller" as UI
+control "REST API" as RestApi
+control "Application Service" as AppService
+database "BookItem Repository" as BookItemRepository
+entity "BookItem (Entity)" as BookItem
+
+Patron -> UI : checkoutBook(ISBN)
+activate UI
+
+UI -> RestApi : POST /loans
+activate RestApi
+
+RestApi -> AppService : checkoutBook(isbn, patronId)
+activate AppService
+
+AppService -> BookItemRepository : findAvailableByIsbn(isbn)
+activate BookItemRepository
+BookItemRepository --> AppService : BookItem
+deactivate BookItemRepository
+
+AppService -> BookItem : checkout(patronId)
+activate BookItem
+BookItem --> AppService : checkedOut()
+deactivate BookItem
+
+AppService -> BookItemRepository : save(bookItem)
+activate BookItemRepository
+BookItemRepository --> AppService : saved()
+deactivate BookItemRepository
+
+AppService --> RestApi : created(loanId)
+deactivate AppService
+
+RestApi --> UI : confirmation(loanId)
+deactivate RestApi
+
+UI --> Patron : showConfirmation(loanId)
+deactivate UI
+
+@enduml

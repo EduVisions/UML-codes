@@ -1,0 +1,86 @@
+@startuml ""
+abstract class Airplane {
+    # String model
+    # Double maxSpeed
+    # Double maxAltitude
+    # AirplaneStatus status
+}
+class MilitaryAirplane extends Airplane {
+}
+abstract class CommercialAirplane extends Airplane {
+}
+class CargoAirplane extends CommercialAirplane {
+}
+class PassengerAirplane extends CommercialAirplane {
+    - int seats
+    - int aisles
+    - boolean hasFirstClassSection
+}
+class Engine {
+    - Double power
+    - Double efficiency
+}
+class Flight {
+    - String number
+    - String departureTime
+    - String arrivalTime
+    - City origin
+    - City destination
+    --
+    + void cancel()
+}
+class City {
+    - String name
+    - Double averageTemperature
+    - ClimateType climateType
+    --
+    + void changeName()
+}
+class Country {
+    - String name
+    --
+    + void changeName()
+}
+enum AirplaneStatus {
+    ACTIVE
+    INACTIVE
+}
+class Pilot {
+    - String name
+    - Double hoursFlown
+    - PilotAvailability availability
+}
+enum PilotAvailability {
+    AVAILABLE
+    UNAVAILABLE
+}
+class IrregularityReport {
+    - Flight flight
+    - Pilot pilot
+    - DateTime timestamp
+    - String description
+    --
+    + void cancel()
+}
+enum ClimateType {
+    TROPICAL
+    TEMPERATE
+    ARID
+    POLAR
+}
+class Airline {
+    - String name
+}
+Airplane "1" *-- "1..4" Engine
+Flight "1" --> "1" City: origin
+Flight "1" --> "1" City: destination
+Airplane "1" <-- "*" Flight
+Airplane "1" --> "1" AirplaneStatus
+Flight "*" -- "2" Pilot
+Pilot -> PilotAvailability
+(Flight, Pilot) .. IrregularityReport
+City --> ClimateType
+City --> Country
+Airline --> Country
+Airline "1" -- "1..*" City
+@enduml

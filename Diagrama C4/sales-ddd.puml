@@ -1,0 +1,43 @@
+@startuml "Conceptual Domain Model with Candidate Bounded Contexts"
+left to right direction
+
+package "Sales" {
+  class Sale {
+    date
+    time
+  }
+
+  class SalesLineItem {
+    quantity
+  }
+
+  Sale "1" -- "1..*" SalesLineItem : contains
+}
+
+package "Payment" {
+  class Payment {
+    amount
+  }
+}
+
+package "Catalog" {
+  class Item
+}
+
+package "Store" {
+  class Store {
+    address
+    name
+  }
+
+  class Register
+
+  Store "1" -- "1..*" Register : houses
+}
+
+Sale "1" -- "0..1" Payment : paid by
+Sale "*" -- "1" Register : captured on
+SalesLineItem "*" -- "1" Item : records sale of
+Item "*" -- "*" Store : stocked in
+
+@enduml

@@ -1,0 +1,53 @@
+@startuml "Components-Bounded Contexts"
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title EduVerify – C4 Component Diagram
+
+Container(spa, "Single Page Application", "Angular", "Provides all course management functionality to administrators and students via their web browser")
+Container(mobile, "Mobile App", "React Native", "Provides course management functionality to students on their mobile devices")
+Container(landingPage, "Landing Page", "React", "Provides information about the platform and allows users to sign up or log in")
+ContainerDb(db, "Database", "MySQL", "Stores course information, categories, and metadata")
+
+Container_Boundary(api, "API Application") {
+    Component(UserModul, "Users", "")
+    Component(ExaModul, "Exams", "")
+    Component(iam, "Identity Access Management", "")
+    Component(Incidents, "Incident Detection", "")
+    Component(Notification, "Alert Management", "")
+    Component(Report, "Report Generation", "")
+    Component(Institution, "Institution Management", "")
+    Component(Storage, "Evidence Management", "")
+    Component(Logging, "Audit & Logging", "")
+}
+
+
+
+Rel(spa, UserModul, "Uses")
+Rel(spa, ExaModul, "Uses")
+Rel(spa, iam, "Authenticates via")
+Rel(spa, Notification, "Receives alerts from")
+Rel(spa, Report, "Views reports from")
+Rel(spa, Institution, "Accesses institution data from")
+Rel(spa, Storage, "Uploads content to")
+Rel(spa, Logging, "Logs audit events to")
+
+Rel(mobile, UserModul, "Uses")
+Rel(mobile, ExaModul, "Uses")
+Rel(mobile, iam, "Authenticates via")
+Rel(mobile, Notification, "Receives alerts from")
+Rel(mobile, Institution, "Accesses institution data from")
+Rel(landingPage, UserModul, "Redirects to")
+Rel(landingPage, ExaModul, "Redirects to")
+Rel(landingPage, iam, "Redirects to")
+Rel(landingPage, Institution, "Redirects to")
+Rel(UserModul, db, "Reads/writes user data")
+Rel(ExaModul, db, "Reads/writes exam data")
+Rel(Institution, db, "Reads/writes institution data")
+Rel(Storage, db, "Stores files and media")
+Rel(Report, db, "Reads reporting data")
+Rel(Logging, db, "Stores audit logs")
+
+Rel(ExaModul, Incidents, "Sends suspicious events to")
+Rel(Logging, Storage, "Persists logs to")
+Rel(Incidents, db, "Stores incident data in")
+@enduml

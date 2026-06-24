@@ -1,0 +1,46 @@
+@startuml "Containers"
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title EduVerify – C4 Container Diagram
+
+Person(teacher, "Teachers", "A person who uses the program to create and manage exams while controlling the students' access to the exams.")
+Person(students, "Students", "A person who will use the program to take exams and be controlled by AI.")
+Person(Admin, "School Administrator", "A person who controls the program to ensure the correct use in the classes")
+    System_Ext(IAM, "Identity and Access Management", "")
+    System_Ext(AI, "MediaPipe AI Engine", "")
+    System_Ext(Camera, "Device Capture Service", "")
+    System_Ext(Backend, "Backend and Database Services", "")
+    System_Ext(Detection, "Detection System", "") 
+
+    System_Boundary(system, "EduVerify Platform") {
+        Container(web, "Web Application", "Angular", "Hosts and delivers the Single Page Application for exam management and proctoring")
+        Container(spa, "Single Page Application", "Angular", "Client-side UI delivered by the Web Application")
+        Container(mobile, "Mobile App", "React Native", "Provides exam management functionality to students on their mobile devices")
+        Container(landingPage, "Landing Page", "React", "Provides information about the platform and allows users to sign up or log in")
+        Container(api, "API Application", "Spring Boot - Java", "Provides exam management and proctoring functionality via RESTful API")
+        ContainerDb(db, "MySQL Database", "MySQL", "Stores exam definitions, user profiles, sessions, results and logs")
+    }
+
+    Rel(teacher, landingPage, "Visits EduVerify")
+    Rel(students, landingPage, "Visits EduVerify")
+    Rel(Admin, landingPage, "Visits EduVerify")
+    Rel(landingPage, web, "Redirects to web app")
+    Rel(web, spa, "Serves")
+    Rel(teacher, web, "Uses")
+    Rel(students, web, "Uses")
+    Rel(Admin, web, "Uses")
+    Rel(teacher, mobile, "Uses")
+    Rel(students, mobile, "Uses")
+    Rel(Admin, mobile, "Uses")
+    Rel(teacher, spa, "Uses")
+    Rel(students, spa, "Uses")
+    Rel(Admin, spa, "Uses")
+    Rel(spa, api, "Makes API calls to [HTTPS]")
+    Rel(mobile, api, "Makes API calls to [HTTPS]")
+    Rel(api, db, "Reads from and writes to [Spring Data JPA]")
+    Rel(api, IAM, "Authenticates users via")
+    Rel(api, AI, "Sends exam events for analysis to")
+    Rel(api, Camera, "Collects camera/microphone streams via")
+    Rel(Backend, db, "Stores and manages backend data")
+    Rel(api, Detection, "Sends suspicious activity to")
+    @enduml

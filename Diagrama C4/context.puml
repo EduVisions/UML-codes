@@ -1,0 +1,25 @@
+@startuml "Context"
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title Eduverify - Context Diagram
+
+Person(teacher, "Teachers", "Creates and manages supervised exams.")
+Person(students, "Students", "Takes supervised online exams monitored by AI.")
+Person(Admin, "School Administrator", "Manages institutional settings and platform access.")
+System(system, "Eduverify", "AI-powered platform for secure online exam supervision.")
+System_Ext(IAM, "Identity and Access Management", "")
+System_Ext(AI, "MediaPipe AI Engine", "")
+System_Ext(Camera, "Device Capture Service", "")
+System_Ext(Backend, "Backend and Database Services", "")
+System_Ext(Detection, "Detection System", "") 
+
+Rel(Admin, system, "Controls exams using")
+Rel(teacher, system, "Manage exams using")
+Rel(students, system, "Take exams using")
+Rel(system, IAM, "Authenticate users")
+Rel(system, AI, "Provide AI-powered features")
+Rel(system, Camera, "Capture images for verification")
+Rel(system, Backend, "Store and manage exam data")
+Rel(system, Detection, "Analyze exam data")
+@enduml
+
