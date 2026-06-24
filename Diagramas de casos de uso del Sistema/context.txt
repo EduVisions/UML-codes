@@ -1,0 +1,39 @@
+Genera un Diagrama de Secuencia UML para el caso de uso "Gestionar examen supervisado" del sistema EduVerify.
+
+Objetivo:
+Representar la interacción entre los componentes del sistema cuando un docente crea y configura un examen supervisado.
+
+Actores y Objetos participantes:
+
+- Docente (Actor)
+- Interfaz de Gestión de Exámenes (Boundary)
+- Gestor de Exámenes (Control)
+- Gestor de Supervisión (Control)
+- Base de Datos (Entity)
+
+Flujo principal:
+
+1. El Docente accede al módulo de gestión de exámenes.
+2. La Interfaz solicita la información necesaria para la configuración.
+3. El Docente registra los datos generales del examen.
+4. La Interfaz envía la información al Gestor de Exámenes.
+5. El Gestor de Exámenes valida la configuración recibida.
+6. El Gestor de Exámenes solicita la configuración de supervisión automática.
+7. El Gestor de Supervisión registra los parámetros de monitoreo.
+8. El Gestor de Exámenes almacena la información del examen en la Base de Datos.
+9. La Base de Datos confirma el registro.
+10. El sistema genera la programación del examen.
+11. El sistema confirma la creación del examen supervisado.
+12. La Interfaz muestra el mensaje de éxito al Docente.
+
+Requisitos del diagrama:
+
+- Utilizar notación UML estándar de Diagramas de Secuencia.
+- Mostrar líneas de vida para todos los participantes.
+- Utilizar mensajes síncronos para las interacciones principales.
+- Incluir mensajes de retorno únicamente cuando aporten claridad.
+- Mantener un máximo aproximado de 12 mensajes.
+- No representar operaciones CRUD detalladas.
+- No incluir validaciones internas complejas.
+- Mostrar únicamente el escenario principal exitoso.
+- Mantener una distribución simple, académica y profesional.

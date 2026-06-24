@@ -1,0 +1,43 @@
+Genera un Diagrama de Secuencia UML para el caso de uso "Configurar institución educativa" del sistema EduVerify.
+
+Objetivo:
+Representar la interacción entre los objetos principales durante la configuración de una institución educativa por parte de un administrador institucional.
+
+Actores y Objetos participantes:
+
+- Administrador Institucional (Actor)
+- Interfaz de Configuración (Boundary)
+- Gestor de Configuración Institucional (Control)
+- Gestor de Usuarios (Control)
+- Base de Datos (Entity)
+
+Flujo principal:
+
+1. El Administrador Institucional accede al módulo de configuración.
+2. La Interfaz de Configuración solicita la información institucional actual.
+3. El Gestor de Configuración Institucional consulta la Base de Datos.
+4. La Base de Datos devuelve la información registrada.
+5. La Interfaz muestra la configuración actual.
+6. El Administrador actualiza la información institucional.
+7. La Interfaz envía los cambios al Gestor de Configuración Institucional.
+8. El Gestor valida la información recibida.
+9. El Gestor actualiza los datos en la Base de Datos.
+10. El Administrador solicita gestionar usuarios.
+11. La Interfaz envía la solicitud al Gestor de Usuarios.
+12. El Gestor de Usuarios registra o actualiza la información correspondiente.
+13. Los cambios son almacenados en la Base de Datos.
+14. El sistema confirma la actualización realizada.
+15. La Interfaz muestra un mensaje de éxito al Administrador.
+
+Requisitos del diagrama:
+
+- Utilizar notación UML estándar de Diagramas de Secuencia.
+- Mostrar líneas de vida para todos los participantes.
+- Utilizar mensajes síncronos para las solicitudes principales.
+- Incluir mensajes de retorno únicamente cuando sean relevantes.
+- Mantener el diagrama simple y legible.
+- No representar operaciones CRUD detalladas.
+- No incluir validaciones internas complejas.
+- Mostrar únicamente el flujo principal exitoso.
+- Mantener un máximo aproximado de 15 mensajes.
+- Utilizar nombres claros y profesionales para los objetos.

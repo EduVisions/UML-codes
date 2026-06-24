@@ -1,0 +1,27 @@
+@startuml
+
+actor/ "Estudiante" <<Business Actor>> as Estudiante
+
+rectangle "Modelo de Casos de Uso del Negocio - EduVerify" {
+    usecase/ "Consultar alertas e incidencias" as UC8
+    usecase/ "Reportar error de incidencia" as UC10    
+}
+
+Estudiante --> UC8
+UC8 --> UC10 : <<include>>
+
+skinparam usecase {
+  BackgroundColor #C7F4FF
+  BorderColor #7A1631
+  StereotypeFontColor #2E7D32
+}
+skinparam actor {
+  BackgroundColor #C7F4FF
+  BorderColor #7A1631
+  StereotypeFontColor #2E7D32
+}
+skinparam Arrow {
+  Color #7A1631
+}
+
+@enduml

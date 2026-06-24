@@ -1,0 +1,52 @@
+@startuml "Configurar institucion educativa"
+
+actor "Administrador Institucional" as Admin
+boundary "Interfaz de Configuracion" as UI
+control "Gestor de Configuracion Institucional" as ConfigManager
+control "Gestor de Usuarios" as UserManager
+database "Repo EduVision" as Database
+
+Admin -> UI : accederModuloConfiguracion()
+activate UI
+
+UI -> ConfigManager : solicitarInformacionInstitucional()
+activate ConfigManager
+
+ConfigManager -> Database : consultarConfiguracion()
+activate Database
+Database --> ConfigManager : informacionInstitucional
+deactivate Database
+
+ConfigManager --> UI : configuracionActual
+deactivate ConfigManager
+
+UI --> Admin : mostrarConfiguracionActual()
+
+Admin -> UI : actualizarInformacionInstitucional(datos)
+
+UI -> ConfigManager : guardarCambiosInstitucionales(datos)
+activate ConfigManager
+
+ConfigManager -> ConfigManager : validarInformacion(datos)
+
+ConfigManager -> Database : actualizarConfiguracion(datos)
+activate Database
+deactivate Database
+deactivate ConfigManager
+
+Admin -> UI : solicitarGestionUsuarios()
+
+UI -> UserManager : gestionarUsuarios(solicitud)
+activate UserManager
+
+UserManager -> Database : almacenarCambiosUsuarios(solicitud)
+activate Database
+deactivate Database
+
+UserManager --> UI : actualizacionRealizada
+deactivate UserManager
+
+UI --> Admin : mostrarMensajeExito()
+deactivate UI
+
+@enduml

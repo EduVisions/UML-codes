@@ -1,0 +1,29 @@
+@startuml
+
+actor/ "Docente" <<Business Actor>> as Docente
+
+rectangle "Modelo de Casos de Uso del Negocio - EduVerify" {
+    usecase/ "Crear examen supervisado" as UC4
+    usecase/ "Programar examen supervisado" as UC5
+}
+
+Docente --> UC4
+UC4 --> UC5 : <<include>>
+
+
+
+skinparam usecase {
+  BackgroundColor #C7F4FF
+  BorderColor #7A1631
+  StereotypeFontColor #2E7D32
+}
+skinparam actor {
+  BackgroundColor #C7F4FF
+  BorderColor #7A1631
+  StereotypeFontColor #2E7D32
+}
+skinparam Arrow {
+  Color #7A1631
+}
+
+@enduml
