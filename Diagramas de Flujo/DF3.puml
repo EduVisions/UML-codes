@@ -1,0 +1,70 @@
+@startuml "Visualizar dashboard de supervision"
+skinparam SwimlaneTitleBackgroundColor #EEE
+skinparam ActivityBackgroundColor #FFF9C4
+skinparam ActivityBorderColor #7A1631
+skinparam Arrow {
+  Color #7A1631
+}
+
+|Docente|
+start
+:Solicita acceder al dashboard
+de supervision;
+
+|Proceso de Negocio EduVerify|
+:Presenta la informacion general
+de supervision disponible;
+
+|Docente|
+:Revisa las alertas e incidencias
+registradas;
+
+if (Desea analizar una incidencia?) then (Si)
+  :Selecciona una incidencia
+  para su analisis;
+
+  |Proceso de Negocio EduVerify|
+  :Proporciona la evidencia asociada
+  a la incidencia;
+
+  |Docente|
+  :Visualiza la evidencia de incidencia
+  (caso de uso incluido);
+
+  :Evalua la situacion observada;
+
+  if (La evidencia requiere accion adicional?) then (Si)
+    :Solicita gestionar alertas
+    e incidencias;
+
+    |Proceso de Negocio EduVerify|
+    :Gestiona alertas e incidencias
+    segun la decision del docente;
+  endif
+
+  |Docente|
+  if (Desea generar un reporte?) then (Si)
+    :Solicita generar reporte
+    de incidencias;
+
+    |Proceso de Negocio EduVerify|
+    :Genera reporte de incidencias;
+  endif
+
+  |Docente|
+  if (Corresponde reportar plagio?) then (Si)
+    :Reporta plagio de estudiante;
+
+    |Proceso de Negocio EduVerify|
+    :Formaliza el reporte de plagio;
+  endif
+
+  |Proceso de Negocio EduVerify|
+  :Registra la decision tomada;
+else (No)
+  |Proceso de Negocio EduVerify|
+  :Registra la revision realizada;
+endif
+
+stop
+@enduml

@@ -1,0 +1,51 @@
+@startuml "Crear examen supervisado"
+skinparam SwimlaneTitleBackgroundColor #EEE
+skinparam ActivityBackgroundColor #FFF9C4
+skinparam ActivityBorderColor #7A1631
+skinparam Arrow {
+  Color #7A1631
+}
+
+|Docente|
+start
+:Solicita crear un examen
+supervisado;
+
+|Proceso de Negocio EduVerify|
+:Recibe la solicitud;
+
+|Docente|
+:Proporciona la informacion
+del examen;
+
+|Proceso de Negocio EduVerify|
+:Verifica que las condiciones
+de negocio esten completas;
+
+while (Las condiciones estan completas?) is (No)
+  :Solicita correccion;
+
+  |Docente|
+  :Ajusta la informacion
+  del examen;
+
+  |Proceso de Negocio EduVerify|
+  :Verifica que las condiciones
+  de negocio esten completas;
+endwhile (Si)
+
+|Docente|
+:Define la programacion
+del examen supervisado;
+
+|Proceso de Negocio EduVerify|
+:Programa el examen supervisado;
+
+|Docente|
+:Confirma la creacion
+del examen supervisado;
+
+|Proceso de Negocio EduVerify|
+:Formaliza el examen supervisado;
+stop
+@enduml
