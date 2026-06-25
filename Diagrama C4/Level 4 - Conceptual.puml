@@ -1,43 +1,75 @@
-@startuml "Conceptual Domain Model with Candidate Bounded Contexts"
+@startuml "EduVerify - Level 4 Conceptual"
 left to right direction
 
-package "Sales" {
-  class Sale {
-    date
-    time
-  }
+title EduVerify - Diagrama Conceptual UML
 
-  class SalesLineItem {
-    quantity
-  }
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
 
-  Sale "1" -- "1..*" SalesLineItem : contains
+abstract class Usuario {
+  nombre
+  correo
 }
 
-package "Payment" {
-  class Payment {
-    amount
-  }
+class Docente {
+  especialidad
 }
 
-package "Catalog" {
-  class Item
+class Estudiante {
+  codigo
 }
 
-package "Store" {
-  class Store {
-    address
-    name
-  }
-
-  class Register
-
-  Store "1" -- "1..*" Register : houses
+class Institucion {
+  nombre
 }
 
-Sale "1" -- "0..1" Payment : paid by
-Sale "*" -- "1" Register : captured on
-SalesLineItem "*" -- "1" Item : records sale of
-Item "*" -- "*" Store : stocked in
+class Examen {
+  titulo
+  fecha
+}
+
+class "Validacion de Identidad" as ValidacionIdentidad {
+  estado
+  fecha
+}
+
+class Incidencia {
+  tipo
+  fecha
+}
+
+class Evidencia {
+  fechaRegistro
+  descripcion
+}
+
+class Justificacion {
+  motivo
+  fecha
+}
+
+class "Solicitud de Revision" as SolicitudRevision {
+  estado
+  fechaSolicitud
+}
+
+class Reporte {
+  fechaGeneracion
+  resumen
+}
+
+Usuario <|-- Docente
+Usuario <|-- Estudiante
+
+Institucion "1" -- "0..*" Examen : administra
+Docente "1" -- "0..*" Examen : crea
+Estudiante "0..*" -- "0..*" Examen : participa en
+Estudiante "1" -- "0..*" ValidacionIdentidad : realiza
+Examen "1" -- "0..*" Incidencia : genera
+Incidencia "1" -- "0..*" Evidencia : registra
+Incidencia "1" -- "0..*" Justificacion : recibe
+Incidencia "1" -- "0..*" SolicitudRevision : origina
+Reporte "0..*" -- "1..*" Examen : resume
+Reporte "0..*" -- "0..*" Incidencia : analiza
 
 @enduml
