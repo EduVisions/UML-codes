@@ -1,0 +1,104 @@
+@startuml "Consultar alertas e incidencias"
+
+actor "Estudiante" as Estudiante
+boundary "Interfaz de Incidencias" as UI
+control "Gestor de Incidencias" as IncidentManager
+control "Gestor de Evidencias" as EvidenceManager
+control "Gestor de Reportes" as ReportManager
+entity "Incidencia" as Incident
+entity "Evidencia" as Evidence
+entity "Reporte de Error" as ErrorReport
+database "Repo EduVision" as Database
+
+Estudiante -> UI : consultarIncidencias()
+activate UI
+
+UI -> IncidentManager : consultarIncidencias()
+activate IncidentManager
+
+IncidentManager -> Database : obtenerHistorialIncidencias(estudiante)
+activate Database
+Database --> IncidentManager : historialIncidencias
+deactivate Database
+
+IncidentManager -> EvidenceManager : consultarEvidencias(historialIncidencias)
+activate EvidenceManager
+
+EvidenceManager -> Database : obtenerEvidencias(historialIncidencias)
+activate Database
+Database --> EvidenceManager : evidencias
+deactivate Database
+
+EvidenceManager -> Evidence : organizarEvidencias(evidencias)
+activate Evidence
+Evidence --> EvidenceManager : evidenciasOrganizadas
+deactivate Evidence
+
+EvidenceManager --> IncidentManager : evidenciasOrganizadas
+deactivate EvidenceManager
+
+IncidentManager -> IncidentManager : consolidarInformacion()
+IncidentManager --> UI : incidenciasConsolidadas
+deactivate IncidentManager
+
+UI --> Estudiante : mostrarIncidencias()
+
+Estudiante -> UI : seleccionarIncidencia(incidencia)
+
+UI -> IncidentManager : obtenerDetalleIncidencia(incidencia)
+activate IncidentManager
+
+IncidentManager -> Database : obtenerDetalleIncidencia(incidencia)
+activate Database
+Database --> IncidentManager : detalleIncidencia
+deactivate Database
+
+IncidentManager -> Incident : prepararDetalle(detalleIncidencia)
+activate Incident
+Incident --> IncidentManager : detallePreparado
+deactivate Incident
+
+IncidentManager -> EvidenceManager : consultarEvidencias(incidencia)
+activate EvidenceManager
+
+EvidenceManager -> Database : obtenerEvidencias(incidencia)
+activate Database
+Database --> EvidenceManager : evidencias
+deactivate Database
+
+EvidenceManager --> IncidentManager : evidencias
+deactivate EvidenceManager
+
+IncidentManager --> UI : detalleYEvidencia
+deactivate IncidentManager
+
+UI --> Estudiante : mostrarDetalleIncidencia()
+
+alt Informacion correcta
+  Estudiante -> UI : finalizarConsulta()
+  UI --> Estudiante : consultaFinalizada
+else Error detectado
+  Estudiante -> UI : reportarErrorIncidencia(datosReporte)
+
+  UI -> ReportManager : registrarReporteError(datosReporte)
+  activate ReportManager
+
+  ReportManager -> ErrorReport : crearReporte(datosReporte)
+  activate ErrorReport
+  ErrorReport --> ReportManager : reporteCreado
+  deactivate ErrorReport
+
+  ReportManager -> Database : almacenarReporte(reporte)
+  activate Database
+  Database --> ReportManager : reporteRegistrado
+  deactivate Database
+
+  ReportManager --> UI : reporteRegistrado
+  deactivate ReportManager
+
+  UI --> Estudiante : mostrarConfirmacion()
+end
+
+deactivate UI
+
+@enduml

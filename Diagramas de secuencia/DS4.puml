@@ -1,0 +1,104 @@
+@startuml "Rendir examen supervisado"
+
+actor "Estudiante" as Estudiante
+boundary "Interfaz de Examen" as UI
+control "Gestor de Evaluacion" as EvaluationManager
+control "Gestor de Supervision" as SupervisionManager
+control "Gestor de Identidad" as IdentityManager
+control "Gestor de Incidencias" as IncidentManager
+entity "Examen" as Exam
+entity "Incidencia" as Incident
+entity "Evidencia" as Evidence
+database "Repo EduVision" as Database
+
+Estudiante -> UI : accederExamen()
+activate UI
+
+UI -> EvaluationManager : solicitarExamen()
+activate EvaluationManager
+
+EvaluationManager -> Database : obtenerExamenProgramado()
+activate Database
+Database --> EvaluationManager : examenProgramado
+deactivate Database
+
+EvaluationManager -> Exam : prepararExamen(examenProgramado)
+activate Exam
+Exam --> EvaluationManager : examenPreparado
+deactivate Exam
+
+EvaluationManager --> UI : examenPreparado
+deactivate EvaluationManager
+
+UI --> Estudiante : mostrarExamen()
+
+UI -> SupervisionManager : iniciarSupervision()
+activate SupervisionManager
+
+SupervisionManager -> IdentityManager : validarIdentidad()
+activate IdentityManager
+IdentityManager --> SupervisionManager : identidadVerificada
+deactivate IdentityManager
+
+alt Identidad validada
+  SupervisionManager --> UI : supervisionActiva
+  UI --> Estudiante : continuarEvaluacion()
+else Posible incidencia detectada
+  SupervisionManager -> IncidentManager : registrarIncidencia()
+  activate IncidentManager
+
+  IncidentManager -> Evidence : generarEvidencia()
+  activate Evidence
+  Evidence --> IncidentManager : evidenciaGenerada
+  deactivate Evidence
+
+  IncidentManager -> Incident : crearIncidencia()
+  activate Incident
+  Incident --> IncidentManager : incidenciaCreada
+  deactivate Incident
+
+  IncidentManager -> Database : almacenarIncidencia(incidencia)
+  activate Database
+  Database --> IncidentManager : incidenciaRegistrada
+  deactivate Database
+
+  IncidentManager --> SupervisionManager : incidenciaRegistrada
+  deactivate IncidentManager
+
+  SupervisionManager --> UI : continuarMonitoreo()
+end
+
+Estudiante -> UI : responderPreguntas(respuestas)
+
+UI -> EvaluationManager : guardarRespuestas(respuestas)
+activate EvaluationManager
+
+EvaluationManager -> Database : registrarRespuestas(respuestas)
+activate Database
+Database --> EvaluationManager : respuestasRegistradas
+deactivate Database
+
+EvaluationManager --> UI : respuestasGuardadas
+deactivate EvaluationManager
+
+UI -> SupervisionManager : registrarSupervision()
+SupervisionManager --> UI : monitoreoRegistrado
+deactivate SupervisionManager
+
+Estudiante -> UI : entregarExamen()
+
+UI -> EvaluationManager : entregarExamen()
+activate EvaluationManager
+
+EvaluationManager -> Database : registrarEntrega()
+activate Database
+Database --> EvaluationManager : entregaRegistrada
+deactivate Database
+
+EvaluationManager --> UI : entregaExitosa
+deactivate EvaluationManager
+
+UI --> Estudiante : mostrarConfirmacion()
+deactivate UI
+
+@enduml

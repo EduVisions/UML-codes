@@ -1,0 +1,51 @@
+@startuml "CUS5 - Consultar alertas e incidencias"
+left to right direction
+skinparam usecase {
+  BackgroundColor #FFF9C4
+  BorderColor #7A1631
+  StereotypeFontColor #2E7D32
+}
+skinparam actor {
+  BackgroundColor #FFF9C4
+  BorderColor #7A1631
+  StereotypeFontColor #2E7D32
+}
+skinparam Arrow {
+  Color #7A1631
+}
+
+actor "Estudiante" as Estudiante
+
+rectangle "EduVerify" {
+  usecase "Consultar alertas e incidencias" as UC_Consultar
+
+  usecase "Consultar historial de incidencias" as UC_Historial
+  usecase "Visualizar detalle de incidencia" as UC_Detalle
+  usecase "Visualizar evidencia de incidencia" as UC_Evidencia
+  usecase "Consultar estado de incidencia" as UC_Estado
+  usecase "Consultar observaciones registradas" as UC_Observaciones
+  usecase "Reportar error de incidencia" as UC_Error
+
+  usecase "Justificar incidencia detectada" as UC_Justificar
+  usecase "Solicitar revision manual de incidencia" as UC_Revision
+  usecase "Descargar evidencia de incidencia" as UC_Descargar
+  usecase "Filtrar incidencias por examen" as UC_FiltrarExamen
+  usecase "Filtrar incidencias por fecha" as UC_FiltrarFecha
+}
+
+Estudiante -- UC_Consultar
+
+UC_Consultar -- UC_Historial : <<include>>
+UC_Consultar -- UC_Detalle : <<include>>
+UC_Consultar -- UC_Evidencia : <<include>>
+UC_Consultar -- UC_Estado : <<include>>
+UC_Consultar -- UC_Observaciones : <<include>>
+UC_Consultar -- UC_Error : <<include>>
+
+UC_Detalle -- UC_Justificar : <<extend>>
+UC_Detalle -- UC_Revision : <<extend>>
+UC_Evidencia -- UC_Descargar : <<extend>>
+UC_Historial -- UC_FiltrarExamen : <<extend>>
+UC_Historial -- UC_FiltrarFecha : <<extend>>
+
+@enduml

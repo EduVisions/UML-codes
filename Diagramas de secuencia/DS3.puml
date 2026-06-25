@@ -1,0 +1,77 @@
+@startuml "Visualizar dashboard de supervision"
+
+actor "Docente" as Docente
+boundary "Dashboard de Supervision" as Dashboard
+control "Gestor de Supervision" as SupervisionManager
+control "Gestor de Incidencias" as IncidentManager
+control "Gestor de Evidencias" as EvidenceManager
+entity "Incidencia" as Incident
+entity "Evidencia" as Evidence
+database "Repo EduVision" as Database
+
+Docente -> Dashboard : accederDashboard()
+activate Dashboard
+
+Dashboard -> SupervisionManager : solicitarInformacionSupervision()
+activate SupervisionManager
+
+SupervisionManager -> IncidentManager : consultarIncidencias()
+activate IncidentManager
+
+IncidentManager -> Database : obtenerIncidencias()
+activate Database
+Database --> IncidentManager : incidencias
+deactivate Database
+
+IncidentManager -> Incident : organizarIncidencias(incidencias)
+activate Incident
+Incident --> IncidentManager : incidenciasOrganizadas
+deactivate Incident
+
+IncidentManager --> SupervisionManager : incidenciasOrganizadas
+deactivate IncidentManager
+
+SupervisionManager -> IncidentManager : consultarAlertas()
+activate IncidentManager
+
+IncidentManager -> Database : obtenerAlertas()
+activate Database
+Database --> IncidentManager : alertas
+deactivate Database
+
+IncidentManager --> SupervisionManager : alertas
+deactivate IncidentManager
+
+SupervisionManager -> SupervisionManager : consolidarInformacion()
+SupervisionManager --> Dashboard : informacionConsolidada
+deactivate SupervisionManager
+
+Dashboard --> Docente : mostrarDashboard()
+
+Docente -> Dashboard : seleccionarIncidencia(incidencia)
+
+Dashboard -> EvidenceManager : visualizarEvidencia(incidencia)
+activate EvidenceManager
+
+EvidenceManager -> Database : obtenerEvidencias(incidencia)
+activate Database
+Database --> EvidenceManager : evidencias
+deactivate Database
+
+EvidenceManager -> Evidence : prepararEvidencia(evidencias)
+activate Evidence
+Evidence --> EvidenceManager : evidenciaPreparada
+deactivate Evidence
+
+alt Evidencia disponible
+  EvidenceManager --> Dashboard : evidenciaDisponible
+  Dashboard --> Docente : mostrarEvidencia()
+else Sin evidencia asociada
+  EvidenceManager --> Dashboard : evidenciaNoDisponible
+  Dashboard --> Docente : mostrarMensajeInformativo()
+end
+
+deactivate EvidenceManager
+deactivate Dashboard
+
+@enduml

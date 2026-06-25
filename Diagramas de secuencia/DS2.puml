@@ -1,0 +1,71 @@
+@startuml "Crear examen supervisado"
+
+actor "Docente" as Docente
+boundary "Interfaz de Examenes" as UI
+control "Gestor de Examenes" as ExamManager
+control "Gestor de Supervision" as SupervisionManager
+control "Gestor de Programacion" as ScheduleManager
+entity "Examen" as Exam
+entity "Configuracion de Supervision" as SupervisionConfig
+database "Repo EduVision" as Database
+
+Docente -> UI : accederModuloExamenes()
+activate UI
+
+UI -> ExamManager : solicitarDatosIniciales()
+activate ExamManager
+
+ExamManager -> SupervisionManager : consultarConfiguracionesDisponibles()
+activate SupervisionManager
+
+SupervisionManager -> Database : obtenerConfiguracionesSupervision()
+activate Database
+Database --> SupervisionManager : configuracionesDisponibles
+deactivate Database
+
+SupervisionManager --> ExamManager : configuracionesDisponibles
+deactivate SupervisionManager
+
+ExamManager --> UI : datosIniciales
+deactivate ExamManager
+
+UI --> Docente : mostrarFormularioExamen()
+
+Docente -> UI : crearExamen(datos)
+
+UI -> ExamManager : crearExamen(datos)
+activate ExamManager
+
+ExamManager -> Exam : crear(datos)
+activate Exam
+Exam --> ExamManager : examenCreado
+deactivate Exam
+
+ExamManager -> SupervisionManager : configurarSupervision(parametros)
+activate SupervisionManager
+
+SupervisionManager -> SupervisionConfig : crearConfiguracion(parametros)
+activate SupervisionConfig
+SupervisionConfig --> SupervisionManager : configuracionCreada
+deactivate SupervisionConfig
+
+SupervisionManager --> ExamManager : supervisionConfigurada
+deactivate SupervisionManager
+
+ExamManager -> ScheduleManager : programarExamen(fechaHora)
+activate ScheduleManager
+ScheduleManager --> ExamManager : programacionConfirmada
+deactivate ScheduleManager
+
+ExamManager -> Database : registrarExamen(examen)
+activate Database
+Database --> ExamManager : examenRegistrado
+deactivate Database
+
+ExamManager --> UI : creacionExitosa
+deactivate ExamManager
+
+UI --> Docente : mostrarConfirmacion()
+deactivate UI
+
+@enduml
