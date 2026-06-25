@@ -1,0 +1,54 @@
+@startuml "Academic Management Context"
+
+skinparam class {
+  BackgroundColor #FFF9C4
+  BorderColor #7A1631
+  StereotypeFontColor #2E7D32
+}
+skinparam Arrow {
+  Color #7A1631
+}
+
+package "Academic Management Context" {
+  class Exam <<E>> {
+    - id : ExamId
+    - teacherId : UserId
+    - title : String
+    - scheduledDate : LocalDateTime
+    - durationMinutes : int
+    - supervisionRules : String
+    --
+    + startExam()
+    + endExam()
+  }
+
+  class ExamSession <<E>> {
+    - id : UUID
+    - examId : ExamId
+    - studentId : UserId
+    - startTime : LocalDateTime
+    - endTime : LocalDateTime
+    - status : String
+    --
+    + startSession()
+    + finishSession()
+  }
+}
+
+package "Shared Context" {
+  class UserId <<C>> {
+    - value : UUID
+  }
+
+  class ExamId <<C>> {
+    - value : UUID
+  }
+}
+
+Exam "1" -- "1..*" ExamSession : contains
+Exam --> ExamId : id
+Exam --> UserId : teacherId
+ExamSession --> ExamId : examId
+ExamSession --> UserId : studentId
+
+@enduml

@@ -1,0 +1,63 @@
+Genera un diagrama de clases UML para el Bounded Context "Logging y Trazabilidad" del proyecto EduVerify.
+
+Objetivo:
+Registrar y consultar eventos relevantes realizados por usuarios y por el sistema, permitiendo mantener trazabilidad sobre acciones ejecutadas durante exámenes, incidencias y procesos de supervisión.
+
+El diagrama debe ser conceptual (nivel análisis), no orientado a implementación.
+
+Incluir las siguientes clases:
+
+Clase: AuditLog
+Atributos:
+- timestamp
+- action
+- description
+
+Operaciones:
+- recordEvent()
+- viewHistory()
+
+Clase: AuditEvent
+Atributos:
+- eventType
+- occurrenceDate
+
+Operaciones:
+- registerEvent()
+
+Clase: UserActivity
+Atributos:
+- activityDate
+- activityDescription
+
+Operaciones:
+- registerActivity()
+
+Shared Context:
+
+Clase: User
+
+Clase: Exam
+
+Clase: Incident
+
+Relaciones:
+
+- Un AuditLog contiene múltiples AuditEvent (1..*)
+- Un AuditLog registra múltiples UserActivity (1..*)
+- Un User puede generar múltiples UserActivity (1..*)
+- Un AuditEvent puede estar asociado a un Exam
+- Un AuditEvent puede estar asociado a un Incident
+- Una UserActivity pertenece a un único User
+
+Restricciones:
+
+- Utilizar nombres de clases en singular.
+- Mostrar atributos y operaciones.
+- Mostrar asociaciones UML y multiplicidades.
+- Mantener el modelo simple y enfocado en el dominio.
+- No incluir identificadores técnicos (UUID, IDs, claves primarias).
+- No incluir repositorios, servicios, controladores, bases de datos o infraestructura.
+- No incluir detalles de implementación.
+- Seguir el mismo estilo visual de los diagramas existentes del proyecto.
+- Utilizar únicamente conceptos relevantes para el análisis del negocio.

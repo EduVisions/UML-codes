@@ -1,0 +1,86 @@
+@startuml "Intelligent Proctoring Context"
+
+skinparam class {
+  BackgroundColor #FFF9C4
+  BorderColor #7A1631
+  StereotypeFontColor #2E7D32
+}
+skinparam Arrow {
+  Color #7A1631
+}
+
+package "Intelligent Proctoring Context" {
+  class Incident <<E>> {
+    - id : IncidentId
+    - examId : ExamId
+    - studentId : UserId
+    - timestamp : LocalDateTime
+    - severity : String
+    - description : String
+    - status : String
+    --
+    + registerIncident()
+    + updateStatus(status : String)
+  }
+
+  class Alert <<E>> {
+    - id : UUID
+    - incidentId : IncidentId
+    - type : String
+    - message : String
+    - createdAt : LocalDateTime
+    - status : String
+    --
+    + generateAlert()
+    + closeAlert()
+  }
+
+  class Evidence <<E>> {
+    - id : UUID
+    - incidentId : IncidentId
+    - mediaUrl : String
+    - mediaType : String
+    - capturedAt : LocalDateTime
+    --
+    + captureEvidence()
+  }
+
+  class ConnectivityEvent <<E>> {
+    - id : UUID
+    - examId : ExamId
+    - studentId : UserId
+    - startTime : LocalDateTime
+    - endTime : LocalDateTime
+    - durationSeconds : int
+    - eventType : String
+    --
+    + registerDisconnection()
+    + registerReconnection()
+  }
+}
+
+package "Shared Context" {
+  class IncidentId <<C>> {
+    - value : UUID
+  }
+
+  class ExamId <<C>> {
+    - value : UUID
+  }
+
+  class UserId <<C>> {
+    - value : UUID
+  }
+}
+
+Incident "1" -- "1..*" Alert : generates
+Incident "1" -- "1..*" Evidence : has
+Incident --> IncidentId : id
+Incident --> ExamId : examId
+Incident --> UserId : studentId
+Alert --> IncidentId : incidentId
+Evidence --> IncidentId : incidentId
+ConnectivityEvent --> ExamId : examId
+ConnectivityEvent --> UserId : studentId
+
+@enduml
