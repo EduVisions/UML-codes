@@ -1,0 +1,71 @@
+@startuml "Configurar institucion educativa"
+skinparam SwimlaneTitleBackgroundColor #EEE
+skinparam ActivityBackgroundColor #FFF9C4
+skinparam ActivityBorderColor #7A1631
+skinparam Arrow {
+  Color #7A1631
+}
+
+|Administrador Institucional|
+start
+:Solicita configurar la institucion;
+
+|Proceso de Negocio EduVerify|
+:Recibe la solicitud y muestra
+un formulario asistido;
+
+|Administrador Institucional|
+:Registra la informacion
+institucional;
+
+|Proceso de Negocio EduVerify|
+:Valida automaticamente completitud,
+formato y dominio institucional;
+
+while (La informacion es valida?) is (No)
+  :Muestra observaciones y campos
+  pendientes por corregir;
+
+  |Administrador Institucional|
+  :Corrige la informacion institucional;
+
+  |Proceso de Negocio EduVerify|
+  :Valida nuevamente la informacion
+  registrada;
+endwhile (Si)
+
+|Administrador Institucional|
+:Gestiona los usuarios institucionales;
+
+|Proceso de Negocio EduVerify|
+:Sugiere roles y permite cargar
+usuarios manualmente o por plantilla;
+
+if (Existen usuarios por modificar?) then (Si)
+  |Administrador Institucional|
+  :Ajusta usuarios, roles o permisos;
+
+  |Proceso de Negocio EduVerify|
+  :Valida correos y actualiza la
+  gestion de usuarios;
+else (No)
+  |Proceso de Negocio EduVerify|
+  :Mantiene la gestion de usuarios
+  propuesta;
+endif
+
+|Administrador Institucional|
+:Confirma la configuracion;
+
+|Proceso de Negocio EduVerify|
+:Registra la configuracion institucional;
+
+if (La configuracion queda activa?) then (Si)
+  :Activa la institucion y envia
+  invitaciones a los usuarios;
+else (No)
+  :Guarda la configuracion como borrador;
+endif
+
+stop
+@enduml

@@ -1,0 +1,73 @@
+@startuml "Rendir examen supervisado"
+skinparam SwimlaneTitleBackgroundColor #EEE
+skinparam ActivityBackgroundColor #FFF9C4
+skinparam ActivityBorderColor #7A1631
+skinparam Arrow {
+  Color #7A1631
+}
+
+|Estudiante|
+start
+:Inicia el proceso para rendir
+el examen supervisado;
+
+|Proceso de Negocio EduVerify|
+:Verifica requisitos tecnicos
+del dispositivo y conexion;
+
+:Valida la identidad del estudiante
+mediante camara y reconocimiento;
+
+if (La identidad y requisitos son validos?) then (Si)
+  :Confirma el inicio de la evaluacion
+  supervisada;
+else (No)
+  :Muestra observaciones para
+  corregir el acceso;
+  stop
+endif
+
+:Habilita la evaluacion;
+
+|Estudiante|
+:Desarrolla las actividades
+del examen;
+
+|Proceso de Negocio EduVerify|
+:Monitorea identidad, camara,
+audio y actividad del navegador;
+
+if (Detecta comportamiento inusual?) then (Si)
+  |Proceso de Negocio EduVerify|
+  :Clasifica la alerta segun
+  nivel de riesgo;
+
+  :Registra incidencia con
+  evidencias asociadas;
+
+  :Notifica al docente si
+  la alerta es critica;
+
+  :Continua la supervision
+  automatica;
+
+  |Estudiante|
+  :Continua respondiendo el examen
+  bajo supervision;
+else (No)
+  |Estudiante|
+  :Continua respondiendo el examen
+  bajo supervision;
+endif
+
+|Estudiante|
+:Finaliza el examen;
+
+|Proceso de Negocio EduVerify|
+:Guarda respuestas y cierre
+de la sesion supervisada;
+
+:Genera resumen de supervision
+del examen;
+stop
+@enduml

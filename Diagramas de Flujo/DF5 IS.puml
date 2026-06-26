@@ -1,0 +1,45 @@
+@startuml "Consultar alertas e incidencias"
+skinparam SwimlaneTitleBackgroundColor #EEE
+skinparam ActivityBackgroundColor #FFF9C4
+skinparam ActivityBorderColor #7A1631
+skinparam Arrow {
+  Color #7A1631
+}
+
+|Estudiante|
+start
+:Solicita consultar sus alertas
+e incidencias;
+
+|Proceso de Negocio EduVerify|
+:Actualiza y muestra el historial
+de alertas e incidencias;
+
+:Permite filtrar por examen,
+fecha, estado y nivel de riesgo;
+
+:Destaca incidencias pendientes
+o de mayor gravedad;
+
+|Estudiante|
+:Revisa el detalle y evidencias
+disponibles;
+
+if (Identifica error o inconsistencia en una incidencia?) then (Si)
+  :Reporta el error identificado
+  y adjunta comentario;
+
+  |Proceso de Negocio EduVerify|
+  :Valida el reporte y registra
+  la solicitud de revision;
+
+  |Estudiante|
+  :Recibe confirmacion y codigo
+  de seguimiento;
+else (No)
+  :Continua revisando
+  la informacion disponible;
+endif
+
+stop
+@enduml
