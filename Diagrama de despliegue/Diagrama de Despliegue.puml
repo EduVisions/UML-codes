@@ -1,0 +1,25 @@
+@startuml ""
+skinparam linetype ortho
+
+node "Cliente Web" as ClienteWeb {
+  artifact "Landing Page" as LandingPage
+  artifact "Single Page Application" as SPA
+}
+
+node "Dispositivo Móvil" as DispositivoMovil {
+  artifact "Mobile App" as MobileApp
+}
+
+node "Servidor de Aplicaciones" as ServidorAplicaciones {
+  artifact "API Application" as APIApplication
+}
+
+node "Servidor de Base de Datos" as ServidorBaseDeDatos {
+  database "Database" as Database
+}
+
+ClienteWeb --> ServidorAplicaciones : HTTPS
+DispositivoMovil --> ServidorAplicaciones : HTTPS
+ServidorAplicaciones --> ServidorBaseDeDatos
+
+@enduml
