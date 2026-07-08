@@ -7,7 +7,7 @@ control "Gestor de Evidencias" as EvidenceManager
 control "Gestor de Reportes" as ReportManager
 entity "Incidencia" as Incident
 entity "Evidencia" as Evidence
-entity "Reporte de Error" as ErrorReport
+entity "Historial de Incidencia" as IncidentHistory
 database "Repo EduVision" as Database
 
 Estudiante -> UI : consultarIncidencias()
@@ -83,12 +83,12 @@ else Error detectado
   UI -> ReportManager : registrarReporteError(datosReporte)
   activate ReportManager
 
-  ReportManager -> ErrorReport : crearReporte(datosReporte)
-  activate ErrorReport
-  ErrorReport --> ReportManager : reporteCreado
-  deactivate ErrorReport
+  ReportManager -> IncidentHistory : registerEvent(datosReporte)
+  activate IncidentHistory
+  IncidentHistory --> ReportManager : eventoRegistrado
+  deactivate IncidentHistory
 
-  ReportManager -> Database : almacenarReporte(reporte)
+  ReportManager -> Database : almacenarReporte(eventoRegistrado)
   activate Database
   Database --> ReportManager : reporteRegistrado
   deactivate Database

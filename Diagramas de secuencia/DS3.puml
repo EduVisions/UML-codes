@@ -6,6 +6,7 @@ control "Gestor de Supervision" as SupervisionManager
 control "Gestor de Incidencias" as IncidentManager
 control "Gestor de Evidencias" as EvidenceManager
 entity "Incidencia" as Incident
+entity "Alerta" as Alert
 entity "Evidencia" as Evidence
 database "Repo EduVision" as Database
 
@@ -39,7 +40,12 @@ activate Database
 Database --> IncidentManager : alertas
 deactivate Database
 
-IncidentManager --> SupervisionManager : alertas
+IncidentManager -> Alert : organizarAlertas(alertas)
+activate Alert
+Alert --> IncidentManager : alertasOrganizadas
+deactivate Alert
+
+IncidentManager --> SupervisionManager : alertasOrganizadas
 deactivate IncidentManager
 
 SupervisionManager -> SupervisionManager : consolidarInformacion()

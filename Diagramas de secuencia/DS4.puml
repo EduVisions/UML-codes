@@ -7,8 +7,7 @@ control "Gestor de Supervision" as SupervisionManager
 control "Gestor de Identidad" as IdentityManager
 control "Gestor de Incidencias" as IncidentManager
 entity "Examen" as Exam
-entity "Incidencia" as Incident
-entity "Evidencia" as Evidence
+entity "Sesion de Examen" as ExamSession
 database "Repo EduVision" as Database
 
 Estudiante -> UI : accederExamen()
@@ -27,6 +26,11 @@ activate Exam
 Exam --> EvaluationManager : examenPreparado
 deactivate Exam
 
+EvaluationManager -> ExamSession : startSession()
+activate ExamSession
+ExamSession --> EvaluationManager : sesionIniciada
+deactivate ExamSession
+
 EvaluationManager --> UI : examenPreparado
 deactivate EvaluationManager
 
@@ -44,26 +48,7 @@ alt Identidad validada
   SupervisionManager --> UI : supervisionActiva
   UI --> Estudiante : continuarEvaluacion()
 else Posible incidencia detectada
-  SupervisionManager -> IncidentManager : registrarIncidencia()
-  activate IncidentManager
-
-  IncidentManager -> Evidence : generarEvidencia()
-  activate Evidence
-  Evidence --> IncidentManager : evidenciaGenerada
-  deactivate Evidence
-
-  IncidentManager -> Incident : crearIncidencia()
-  activate Incident
-  Incident --> IncidentManager : incidenciaCreada
-  deactivate Incident
-
-  IncidentManager -> Database : almacenarIncidencia(incidencia)
-  activate Database
-  Database --> IncidentManager : incidenciaRegistrada
-  deactivate Database
-
-  IncidentManager --> SupervisionManager : incidenciaRegistrada
-  deactivate IncidentManager
+  ref over SupervisionManager, IncidentManager : Detección de incidencia durante supervisión\n(ver DS6)
 
   SupervisionManager --> UI : continuarMonitoreo()
 end
@@ -89,6 +74,11 @@ Estudiante -> UI : entregarExamen()
 
 UI -> EvaluationManager : entregarExamen()
 activate EvaluationManager
+
+EvaluationManager -> ExamSession : finishSession()
+activate ExamSession
+ExamSession --> EvaluationManager : sesionFinalizada
+deactivate ExamSession
 
 EvaluationManager -> Database : registrarEntrega()
 activate Database
