@@ -17,27 +17,27 @@ skinparam Arrow {
 actor "Docente" as Docente
 
 rectangle "EduVerify" {
-  usecase "Crear examen supervisado" as UC_Crear
-  usecase "Definir informacion del examen" as UC_Info
-  usecase "Programar examen" as UC_Programar
-  usecase "Configurar reglas de supervision" as UC_Reglas
-  usecase "Asignar estudiantes" as UC_Estudiantes
-  usecase "Establecer criterios de evaluacion" as UC_Criterios
-  usecase "Confirmar creacion del examen" as UC_Confirmar
-  usecase "Cancelar creacion del examen" as UC_Cancelar
-  usecase "Notificar examen programado" as UC_Notificar
+  usecase "Crear examen supervisado" as ucCrear
+  usecase "Definir informacion del examen" as ucInfo
+  usecase "Programar examen" as ucProgramar
+  usecase "Configurar reglas de supervision" as ucReglas
+  usecase "Asignar estudiantes" as ucEstudiantes
+  usecase "Establecer criterios de evaluacion" as ucCriterios
+  usecase "Confirmar creacion del examen" as ucConfirmar
+  usecase "Cancelar creacion del examen" as ucCancelar
+  usecase "Notificar examen programado" as ucNotificar
 }
 
-Docente -- UC_Crear
+Docente -- ucCrear
 
-UC_Crear -- UC_Info : <<include>>
-UC_Crear -- UC_Programar : <<include>>
-UC_Crear -- UC_Reglas : <<include>>
-UC_Crear -- UC_Estudiantes : <<include>>
-UC_Crear -- UC_Criterios : <<include>>
-UC_Crear -- UC_Confirmar : <<include>>
+ucCrear -- ucInfo : <<include>>
+ucCrear -- ucProgramar : <<include>>
+ucCrear -- ucReglas : <<include>>
+ucCrear -- ucEstudiantes : <<include>>
+ucCrear -- ucCriterios : <<include>>
+ucCrear -- ucConfirmar : <<include>>
 
-UC_Crear -- UC_Cancelar : <<extend>>
-UC_Confirmar -- UC_Notificar : <<extend>>
+ucCrear -- ucCancelar : <<extend>>
+ucConfirmar -- ucNotificar : <<extend>>
 
 @enduml

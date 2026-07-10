@@ -49,7 +49,7 @@ alt Identity validated
   SupervisionManager --> UI : supervisionActive
   UI --> Student : continueEvaluation()
 else Possible incident detected
-  ref over SupervisionManager, IncidentManager : Incident detection during supervision\n(see DS6)
+  ref over SupervisionManager, IncidentManager : Incident detection during supervision
 
   SupervisionManager --> UI : continueMonitoring()
 end
