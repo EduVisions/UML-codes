@@ -1,102 +1,104 @@
-@startuml "Consultar alertas e incidencias"
+@startuml "Query Alerts and Incidents"
 
-actor "Estudiante" as Estudiante
-boundary "Interfaz de Incidencias" as UI
-control "Gestor de Incidencias" as IncidentManager
-control "Gestor de Evidencias" as EvidenceManager
-control "Gestor de Reportes" as ReportManager
-entity "Incidencia" as Incident
-entity "Evidencia" as Evidence
-entity "Historial de Incidencia" as IncidentHistory
-database "Repo EduVision" as Database
+actor "Student" as Student
+boundary "Incident Interface" as UI
+control "Incident Manager" as IncidentManager
+control "Evidence Manager" as EvidenceManager
+control "Report Manager" as ReportManager
+entity "Incident" as Incident
+entity "Evidence" as Evidence
+entity "Incident History" as IncidentHistory
+database "Incident Repository" as IncidentRepository
+database "Evidence Repository" as EvidenceRepository
+database "Incident History Repository" as IncidentHistoryRepository
 
-Estudiante -> UI : consultarIncidencias()
+Student -> UI : queryIncidents()
 activate UI
 
-UI -> IncidentManager : consultarIncidencias()
+UI -> IncidentManager : queryIncidents()
 activate IncidentManager
 
-IncidentManager -> Database : obtenerHistorialIncidencias(estudiante)
-activate Database
-Database --> IncidentManager : historialIncidencias
-deactivate Database
+IncidentManager -> IncidentRepository : getIncidentHistory(student)
+activate IncidentRepository
+IncidentRepository --> IncidentManager : incidentHistory
+deactivate IncidentRepository
 
-IncidentManager -> EvidenceManager : consultarEvidencias(historialIncidencias)
+IncidentManager -> EvidenceManager : queryEvidence(incidentHistory)
 activate EvidenceManager
 
-EvidenceManager -> Database : obtenerEvidencias(historialIncidencias)
-activate Database
-Database --> EvidenceManager : evidencias
-deactivate Database
+EvidenceManager -> EvidenceRepository : getEvidence(incidentHistory)
+activate EvidenceRepository
+EvidenceRepository --> EvidenceManager : evidenceList
+deactivate EvidenceRepository
 
-EvidenceManager -> Evidence : organizarEvidencias(evidencias)
+EvidenceManager -> Evidence : organizeEvidence(evidenceList)
 activate Evidence
-Evidence --> EvidenceManager : evidenciasOrganizadas
+Evidence --> EvidenceManager : organizedEvidence
 deactivate Evidence
 
-EvidenceManager --> IncidentManager : evidenciasOrganizadas
+EvidenceManager --> IncidentManager : organizedEvidence
 deactivate EvidenceManager
 
-IncidentManager -> IncidentManager : consolidarInformacion()
-IncidentManager --> UI : incidenciasConsolidadas
+IncidentManager -> IncidentManager : consolidateInformation()
+IncidentManager --> UI : consolidatedIncidents
 deactivate IncidentManager
 
-UI --> Estudiante : mostrarIncidencias()
+UI --> Student : showIncidents()
 
-Estudiante -> UI : seleccionarIncidencia(incidencia)
+Student -> UI : selectIncident(incident)
 
-UI -> IncidentManager : obtenerDetalleIncidencia(incidencia)
+UI -> IncidentManager : getIncidentDetail(incident)
 activate IncidentManager
 
-IncidentManager -> Database : obtenerDetalleIncidencia(incidencia)
-activate Database
-Database --> IncidentManager : detalleIncidencia
-deactivate Database
+IncidentManager -> IncidentRepository : getIncidentDetail(incident)
+activate IncidentRepository
+IncidentRepository --> IncidentManager : incidentDetail
+deactivate IncidentRepository
 
-IncidentManager -> Incident : prepararDetalle(detalleIncidencia)
+IncidentManager -> Incident : prepareDetail(incidentDetail)
 activate Incident
-Incident --> IncidentManager : detallePreparado
+Incident --> IncidentManager : detailPrepared
 deactivate Incident
 
-IncidentManager -> EvidenceManager : consultarEvidencias(incidencia)
+IncidentManager -> EvidenceManager : queryEvidence(incident)
 activate EvidenceManager
 
-EvidenceManager -> Database : obtenerEvidencias(incidencia)
-activate Database
-Database --> EvidenceManager : evidencias
-deactivate Database
+EvidenceManager -> EvidenceRepository : getEvidence(incident)
+activate EvidenceRepository
+EvidenceRepository --> EvidenceManager : evidenceList
+deactivate EvidenceRepository
 
-EvidenceManager --> IncidentManager : evidencias
+EvidenceManager --> IncidentManager : evidenceList
 deactivate EvidenceManager
 
-IncidentManager --> UI : detalleYEvidencia
+IncidentManager --> UI : detailAndEvidence
 deactivate IncidentManager
 
-UI --> Estudiante : mostrarDetalleIncidencia()
+UI --> Student : showIncidentDetail()
 
-alt Informacion correcta
-  Estudiante -> UI : finalizarConsulta()
-  UI --> Estudiante : consultaFinalizada
-else Error detectado
-  Estudiante -> UI : reportarErrorIncidencia(datosReporte)
+alt Information correct
+  Student -> UI : finishQuery()
+  UI --> Student : queryFinished
+else Error detected
+  Student -> UI : reportIncidentError(reportData)
 
-  UI -> ReportManager : registrarReporteError(datosReporte)
+  UI -> ReportManager : registerErrorReport(reportData)
   activate ReportManager
 
-  ReportManager -> IncidentHistory : registerEvent(datosReporte)
+  ReportManager -> IncidentHistory : registerEvent(reportData)
   activate IncidentHistory
-  IncidentHistory --> ReportManager : eventoRegistrado
+  IncidentHistory --> ReportManager : eventRegistered
   deactivate IncidentHistory
 
-  ReportManager -> Database : almacenarReporte(eventoRegistrado)
-  activate Database
-  Database --> ReportManager : reporteRegistrado
-  deactivate Database
+  ReportManager -> IncidentHistoryRepository : storeReport(eventRegistered)
+  activate IncidentHistoryRepository
+  IncidentHistoryRepository --> ReportManager : reportRegistered
+  deactivate IncidentHistoryRepository
 
-  ReportManager --> UI : reporteRegistrado
+  ReportManager --> UI : reportRegistered
   deactivate ReportManager
 
-  UI --> Estudiante : mostrarConfirmacion()
+  UI --> Student : showConfirmation()
 end
 
 deactivate UI

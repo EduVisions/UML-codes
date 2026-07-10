@@ -1,25 +1,36 @@
 @startuml ""
 skinparam linetype ortho
 
-node "Cliente Web" as ClienteWeb {
-  artifact "Landing Page" as LandingPage
-  artifact "Single Page Application" as SPA
-}
+node "Cliente Web" as ClienteWeb
 
 node "Dispositivo Móvil" as DispositivoMovil {
   artifact "Mobile App" as MobileApp
 }
 
-node "Servidor de Aplicaciones" as ServidorAplicaciones {
+node "Amazon S3\n(Static Website Hosting)" as S3Static {
+  artifact "Landing Page" as LandingPage
+  artifact "Single Page Application" as SPA
+}
+
+node "Application Load Balancer" as ALB
+
+node "Servidor de Aplicaciones (EC2)" as ServidorAplicaciones {
   artifact "API Application" as APIApplication
 }
 
-node "Servidor de Base de Datos" as ServidorBaseDeDatos {
+node "Servidor de Base de Datos (Amazon RDS)" as ServidorBaseDeDatos {
   database "Database" as Database
 }
 
-ClienteWeb --> ServidorAplicaciones : HTTPS
-DispositivoMovil --> ServidorAplicaciones : HTTPS
+node "Amazon S3\n(Evidence Storage)" as S3Evidence {
+  artifact "Evidence Files" as EvidenceFiles
+}
+
+ClienteWeb --> S3Static : HTTPS
+ClienteWeb --> ALB : HTTPS
+DispositivoMovil --> ALB : HTTPS
+ALB --> ServidorAplicaciones : HTTP
 ServidorAplicaciones --> ServidorBaseDeDatos
+ServidorAplicaciones --> S3Evidence : Almacena evidencia
 
 @enduml

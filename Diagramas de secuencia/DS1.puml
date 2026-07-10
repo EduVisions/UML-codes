@@ -1,52 +1,57 @@
-@startuml "Configurar institucion educativa"
+@startuml "Configure Educational Institution"
 
-actor "Administrador Institucional" as Admin
-boundary "Interfaz de Configuracion" as UI
-control "Gestor de Configuracion Institucional" as ConfigManager
-control "Gestor de Usuarios" as UserManager
-database "Repo EduVision" as Database
+actor "Institutional Administrator" as Admin
+boundary "Configuration Interface" as UI
+control "Institutional Configuration Manager" as ConfigManager
+control "User Manager" as UserManager
+entity "Institution" as Institution
+database "Configuration Repository" as ConfigurationRepository
+database "User Repository" as UserRepository
 
-Admin -> UI : accederModuloConfiguracion()
+Admin -> UI : accessConfigurationModule()
 activate UI
 
-UI -> ConfigManager : solicitarInformacionInstitucional()
+UI -> ConfigManager : requestInstitutionalInformation()
 activate ConfigManager
 
-ConfigManager -> Database : consultarConfiguracion()
-activate Database
-Database --> ConfigManager : informacionInstitucional
-deactivate Database
+ConfigManager -> ConfigurationRepository : queryConfiguration()
+activate ConfigurationRepository
+ConfigurationRepository --> ConfigManager : institutionalInformation
+deactivate ConfigurationRepository
 
-ConfigManager --> UI : configuracionActual
+ConfigManager --> UI : currentConfiguration
 deactivate ConfigManager
 
-UI --> Admin : mostrarConfiguracionActual()
+UI --> Admin : showCurrentConfiguration()
 
-Admin -> UI : actualizarInformacionInstitucional(datos)
+Admin -> UI : updateInstitutionalInformation(data)
 
-UI -> ConfigManager : guardarCambiosInstitucionales(datos)
+UI -> ConfigManager : saveInstitutionalChanges(data)
 activate ConfigManager
 
-ConfigManager -> ConfigManager : validarInformacion(datos)
+ConfigManager -> Institution : validateInformation(data)
+activate Institution
+Institution --> ConfigManager : informationValidated
+deactivate Institution
 
-ConfigManager -> Database : actualizarConfiguracion(datos)
-activate Database
-deactivate Database
+ConfigManager -> ConfigurationRepository : updateConfiguration(data)
+activate ConfigurationRepository
+deactivate ConfigurationRepository
 deactivate ConfigManager
 
-Admin -> UI : solicitarGestionUsuarios()
+Admin -> UI : requestUserManagement()
 
-UI -> UserManager : gestionarUsuarios(solicitud)
+UI -> UserManager : manageUsers(request)
 activate UserManager
 
-UserManager -> Database : almacenarCambiosUsuarios(solicitud)
-activate Database
-deactivate Database
+UserManager -> UserRepository : storeUserChanges(request)
+activate UserRepository
+deactivate UserRepository
 
-UserManager --> UI : actualizacionRealizada
+UserManager --> UI : updateCompleted
 deactivate UserManager
 
-UI --> Admin : mostrarMensajeExito()
+UI --> Admin : showSuccessMessage()
 deactivate UI
 
 @enduml

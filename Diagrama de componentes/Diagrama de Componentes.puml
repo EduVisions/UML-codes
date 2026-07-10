@@ -31,9 +31,6 @@ package "API Application" as APIApp {
   interface "IAuditLogging" as IAuditLogging
 }
 
-component "Database" as Database
-interface "IDataPersistence" as IDataPersistence
-
 ' Interfaces ofrecidas (lollipop)
 Users - IUsers
 Exams - IExams
@@ -44,7 +41,6 @@ ReportGeneration - IReportGeneration
 InstitutionManagement - IInstitutionManagement
 EvidenceManagement - IEvidenceManagement
 AuditLogging - IAuditLogging
-Database - IDataPersistence
 
 ' Interfaces requeridas (socket) - Landing Page
 LandingPage --( IUsers
@@ -71,13 +67,6 @@ MobileApp --( IInstitutionManagement
 
 ' Interfaces requeridas (socket) - internas del API Application
 Users --( IIAM
-Users --( IDataPersistence
-Exams --( IDataPersistence
-InstitutionManagement --( IDataPersistence
-IncidentDetection --( IDataPersistence
-EvidenceManagement --( IDataPersistence
-ReportGeneration --( IDataPersistence
-AuditLogging --( IDataPersistence
 AlertManagement --( IIncidentDetection
 ReportGeneration --( IIncidentDetection
 EvidenceManagement --( IIncidentDetection

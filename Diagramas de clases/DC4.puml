@@ -10,7 +10,7 @@ skinparam Arrow {
 }
 
 package "Academic Management Context" {
-  class Exam <<E>> {
+  class Exam << (E,#2E7D32) >> {
     - id : ExamId
     - teacherId : UserId
     - title : String
@@ -22,7 +22,7 @@ package "Academic Management Context" {
     + endExam()
   }
 
-  class ExamSession <<E>> {
+  class ExamSession << (E,#2E7D32) >> {
     - id : UUID
     - examId : ExamId
     - studentId : UserId
@@ -36,11 +36,11 @@ package "Academic Management Context" {
 }
 
 package "Shared Context" {
-  class UserId <<C>> {
+  class UserId << (V,#2E7D32) >> {
     - value : UUID
   }
 
-  class ExamId <<C>> {
+  class ExamId << (V,#2E7D32) >> {
     - value : UUID
   }
 }

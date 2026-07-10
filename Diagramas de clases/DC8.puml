@@ -1,4 +1,4 @@
-@startuml "Logging y Trazabilidad"
+@startuml "Logging and Traceability"
 
 skinparam class {
   BackgroundColor #FFF9C4
@@ -9,7 +9,7 @@ skinparam Arrow {
   Color #7A1631
 }
 
-package "Logging y Trazabilidad" {
+package "Logging and Traceability" {
   class AuditLog {
     - timestamp
     - action
@@ -35,9 +35,9 @@ package "Logging y Trazabilidad" {
 }
 
 package "Shared Context" {
-  class User <<C>>
-  class Exam <<C>>
-  class Incident <<C>>
+  class User << (E,#2E7D32) >>
+  class Exam << (E,#2E7D32) >>
+  class Incident << (E,#2E7D32) >>
 }
 
 AuditLog "1" *-- "1..*" AuditEvent : contains
