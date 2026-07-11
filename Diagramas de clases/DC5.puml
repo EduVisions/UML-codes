@@ -24,7 +24,7 @@ package "Intelligent Proctoring Context" {
   }
 
   class Alert << (E,#2E7D32) >> {
-    - id : UUID
+    - id : id
     - incidentId : IncidentId
     - type : String
     - message : String
@@ -36,7 +36,7 @@ package "Intelligent Proctoring Context" {
   }
 
   class Evidence << (E,#2E7D32) >> {
-    - id : UUID
+    - id : id
     - incidentId : IncidentId
     - mediaUrl : String
     - mediaType : String
@@ -46,7 +46,7 @@ package "Intelligent Proctoring Context" {
   }
 
   class ConnectivityEvent << (E,#2E7D32) >> {
-    - id : UUID
+    - id : id
     - examId : ExamId
     - studentId : UserId
     - startTime : LocalDateTime
@@ -61,15 +61,15 @@ package "Intelligent Proctoring Context" {
 
 package "Shared Context" {
   class IncidentId << (V,#2E7D32) >> {
-    - value : UUID
+    - value : id
   }
 
   class ExamId << (V,#2E7D32) >> {
-    - value : UUID
+    - value : id
   }
 
   class UserId << (V,#2E7D32) >> {
-    - value : UUID
+    - value : id
   }
 }
 

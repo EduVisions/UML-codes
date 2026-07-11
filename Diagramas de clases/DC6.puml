@@ -11,7 +11,7 @@ skinparam Arrow {
 
 package "Incident Management Context" {
   class IncidentCase << (E,#2E7D32) >> {
-    - id : UUID
+    - id : id
     - incidentId : IncidentId
     - status : String
     - createdAt : LocalDateTime
@@ -23,8 +23,8 @@ package "Incident Management Context" {
   }
 
   class Justification << (E,#2E7D32) >> {
-    - id : UUID
-    - incidentCaseId : UUID
+    - id : id
+    - incidentCaseId : id
     - studentId : UserId
     - reason : String
     - submittedAt : LocalDateTime
@@ -33,8 +33,8 @@ package "Incident Management Context" {
   }
 
   class ReviewRequest << (E,#2E7D32) >> {
-    - id : UUID
-    - incidentCaseId : UUID
+    - id : id
+    - incidentCaseId : id
     - studentId : UserId
     - requestDate : LocalDateTime
     - status : String
@@ -45,8 +45,8 @@ package "Incident Management Context" {
   }
 
   class IncidentHistory << (E,#2E7D32) >> {
-    - id : UUID
-    - incidentCaseId : UUID
+    - id : id
+    - incidentCaseId : id
     - action : String
     - timestamp : LocalDateTime
     - performedBy : UserId
@@ -57,11 +57,11 @@ package "Incident Management Context" {
 
 package "Shared Context" {
   class IncidentId << (V,#2E7D32) >> {
-    - value : UUID
+    - value : id
   }
 
   class UserId << (V,#2E7D32) >> {
-    - value : UUID
+    - value : id
   }
 }
 
