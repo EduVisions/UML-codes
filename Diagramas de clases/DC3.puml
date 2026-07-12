@@ -1,4 +1,4 @@
-@startuml classDiagram
+@startuml IAM Context
 
 skinparam class {
   BackgroundColor #FFF9C4
