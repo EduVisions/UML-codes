@@ -17,41 +17,41 @@ skinparam Arrow {
 actor "Estudiante" as Estudiante
 
 rectangle "EduVerify" {
-  usecase "Rendir examen supervisado" as UC_Rendir
+  usecase "Rendir examen supervisado" as ucRendir
 
-  usecase "Validar identidad del estudiante" as UC_Validar
-  usecase "Acceder al examen programado" as UC_Acceder
-  usecase "Visualizar instrucciones del examen" as UC_Instrucciones
-  usecase "Responder preguntas del examen" as UC_Responder
-  usecase "Monitorear identidad continuamente" as UC_Monitorear
-  usecase "Registrar evidencia multimedia" as UC_Evidencia
-  usecase "Registrar eventos de conectividad" as UC_Conectividad
-  usecase "Entregar examen" as UC_Entregar
+  usecase "Validar identidad del estudiante" as ucValidar
+  usecase "Acceder al examen programado" as ucAcceder
+  usecase "Visualizar instrucciones del examen" as ucInstrucciones
+  usecase "Responder preguntas del examen" as ucResponder
+  usecase "Monitorear identidad continuamente" as ucMonitorear
+  usecase "Registrar evidencia multimedia" as ucEvidencia
+  usecase "Registrar eventos de conectividad" as ucConectividad
+  usecase "Entregar examen" as ucEntregar
 
-  usecase "Detectar incidencia de supervision" as UC_Incidencia
-  usecase "Generar alerta de comportamiento sospechoso" as UC_Alerta
-  usecase "Registrar desconexion del estudiante" as UC_Desconexion
-  usecase "Registrar reconexion del estudiante" as UC_Reconexion
-  usecase "Notificar incidencia al docente" as UC_Notificar
-  usecase "Bloquear acceso al examen" as UC_Bloquear
+  usecase "Detectar incidencia de supervision" as ucIncidencia
+  usecase "Generar alerta de comportamiento sospechoso" as ucAlerta
+  usecase "Registrar desconexion del estudiante" as ucDesconexion
+  usecase "Registrar reconexion del estudiante" as ucReconexion
+  usecase "Notificar incidencia al docente" as ucNotificar
+  usecase "Bloquear acceso al examen" as ucBloquear
 }
 
-Estudiante -- UC_Rendir
+Estudiante -- ucRendir
 
-UC_Rendir -- UC_Validar : <<include>>
-UC_Rendir -- UC_Acceder : <<include>>
-UC_Rendir -- UC_Instrucciones : <<include>>
-UC_Rendir -- UC_Responder : <<include>>
-UC_Rendir -- UC_Monitorear : <<include>>
-UC_Rendir -- UC_Evidencia : <<include>>
-UC_Rendir -- UC_Conectividad : <<include>>
-UC_Rendir -- UC_Entregar : <<include>>
+ucRendir -- ucValidar : <<include>>
+ucRendir -- ucAcceder : <<include>>
+ucRendir -- ucInstrucciones : <<include>>
+ucRendir -- ucResponder : <<include>>
+ucRendir -- ucMonitorear : <<include>>
+ucRendir -- ucEvidencia : <<include>>
+ucRendir -- ucConectividad : <<include>>
+ucRendir -- ucEntregar : <<include>>
 
-UC_Monitorear -- UC_Incidencia : <<include>>
-UC_Incidencia -- UC_Alerta : <<include>>
-UC_Conectividad -- UC_Desconexion : <<extend>>
-UC_Conectividad -- UC_Reconexion : <<extend>>
-UC_Incidencia -- UC_Notificar : <<extend>>
-UC_Acceder -- UC_Bloquear : <<extend>>
+ucMonitorear -- ucIncidencia : <<include>>
+ucIncidencia -- ucAlerta : <<include>>
+ucConectividad -- ucDesconexion : <<extend>>
+ucConectividad -- ucReconexion : <<extend>>
+ucIncidencia -- ucNotificar : <<extend>>
+ucAcceder -- ucBloquear : <<extend>>
 
 @enduml

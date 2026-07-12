@@ -1,0 +1,76 @@
+@startuml ""
+skinparam componentStyle uml2
+skinparam linetype ortho
+left to right direction
+
+package "Frontend" {
+  component "Landing Page" as LandingPage
+  component "Single Page Application" as SPA
+  component "Mobile App" as MobileApp
+}
+
+package "API Application" as APIApp {
+  component "Users" as Users
+  component "Exams" as Exams
+  component "Identity Access Management" as IAM
+  component "Incident Detection" as IncidentDetection
+  component "Alert Management" as AlertManagement
+  component "Report Generation" as ReportGeneration
+  component "Institution Management" as InstitutionManagement
+  component "Evidence Management" as EvidenceManagement
+  component "Audit & Logging" as AuditLogging
+
+  interface "IUsers" as IUsers
+  interface "IExams" as IExams
+  interface "IIdentityAccessManagement" as IIAM
+  interface "IIncidentDetection" as IIncidentDetection
+  interface "IAlertManagement" as IAlertManagement
+  interface "IReportGeneration" as IReportGeneration
+  interface "IInstitutionManagement" as IInstitutionManagement
+  interface "IEvidenceManagement" as IEvidenceManagement
+  interface "IAuditLogging" as IAuditLogging
+}
+
+' Interfaces ofrecidas (lollipop)
+Users - IUsers
+Exams - IExams
+IAM - IIAM
+IncidentDetection - IIncidentDetection
+AlertManagement - IAlertManagement
+ReportGeneration - IReportGeneration
+InstitutionManagement - IInstitutionManagement
+EvidenceManagement - IEvidenceManagement
+AuditLogging - IAuditLogging
+
+' Interfaces requeridas (socket) - Landing Page
+LandingPage --( IUsers
+LandingPage --( IExams
+LandingPage --( IIAM
+LandingPage --( IInstitutionManagement
+
+' Interfaces requeridas (socket) - Single Page Application
+SPA --( IUsers
+SPA --( IExams
+SPA --( IIAM
+SPA --( IAlertManagement
+SPA --( IReportGeneration
+SPA --( IInstitutionManagement
+SPA --( IEvidenceManagement
+SPA --( IAuditLogging
+
+' Interfaces requeridas (socket) - Mobile App
+MobileApp --( IUsers
+MobileApp --( IExams
+MobileApp --( IIAM
+MobileApp --( IAlertManagement
+MobileApp --( IInstitutionManagement
+
+' Interfaces requeridas (socket) - internas del API Application
+Users --( IIAM
+AlertManagement --( IIncidentDetection
+ReportGeneration --( IIncidentDetection
+EvidenceManagement --( IIncidentDetection
+Exams --( IIncidentDetection
+AuditLogging --( IEvidenceManagement
+
+@enduml

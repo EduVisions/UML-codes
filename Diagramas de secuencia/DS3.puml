@@ -1,74 +1,82 @@
-@startuml "Visualizar dashboard de supervision"
+@startuml "View Supervision Dashboard"
 
-actor "Docente" as Docente
-boundary "Dashboard de Supervision" as Dashboard
-control "Gestor de Supervision" as SupervisionManager
-control "Gestor de Incidencias" as IncidentManager
-control "Gestor de Evidencias" as EvidenceManager
-entity "Incidencia" as Incident
-entity "Evidencia" as Evidence
-database "Repo EduVision" as Database
+actor "Teacher" as Teacher
+boundary "Supervision Dashboard" as Dashboard
+control "Supervision Manager" as SupervisionManager
+control "Incident Manager" as IncidentManager
+control "Evidence Manager" as EvidenceManager
+entity "Incident" as Incident
+entity "Alert" as Alert
+entity "Evidence" as Evidence
+database "Incident Repository" as IncidentRepository
+database "Alert Repository" as AlertRepository
+database "Evidence Repository" as EvidenceRepository
 
-Docente -> Dashboard : accederDashboard()
+Teacher -> Dashboard : accessDashboard()
 activate Dashboard
 
-Dashboard -> SupervisionManager : solicitarInformacionSupervision()
+Dashboard -> SupervisionManager : requestSupervisionInformation()
 activate SupervisionManager
 
-SupervisionManager -> IncidentManager : consultarIncidencias()
+SupervisionManager -> IncidentManager : queryIncidents()
 activate IncidentManager
 
-IncidentManager -> Database : obtenerIncidencias()
-activate Database
-Database --> IncidentManager : incidencias
-deactivate Database
+IncidentManager -> IncidentRepository : getIncidents()
+activate IncidentRepository
+IncidentRepository --> IncidentManager : incidents
+deactivate IncidentRepository
 
-IncidentManager -> Incident : organizarIncidencias(incidencias)
+IncidentManager -> Incident : organizeIncidents(incidents)
 activate Incident
-Incident --> IncidentManager : incidenciasOrganizadas
+Incident --> IncidentManager : organizedIncidents
 deactivate Incident
 
-IncidentManager --> SupervisionManager : incidenciasOrganizadas
+IncidentManager --> SupervisionManager : organizedIncidents
 deactivate IncidentManager
 
-SupervisionManager -> IncidentManager : consultarAlertas()
+SupervisionManager -> IncidentManager : queryAlerts()
 activate IncidentManager
 
-IncidentManager -> Database : obtenerAlertas()
-activate Database
-Database --> IncidentManager : alertas
-deactivate Database
+IncidentManager -> AlertRepository : getAlerts()
+activate AlertRepository
+AlertRepository --> IncidentManager : alerts
+deactivate AlertRepository
 
-IncidentManager --> SupervisionManager : alertas
+IncidentManager -> Alert : organizeAlerts(alerts)
+activate Alert
+Alert --> IncidentManager : organizedAlerts
+deactivate Alert
+
+IncidentManager --> SupervisionManager : organizedAlerts
 deactivate IncidentManager
 
-SupervisionManager -> SupervisionManager : consolidarInformacion()
-SupervisionManager --> Dashboard : informacionConsolidada
+SupervisionManager -> SupervisionManager : consolidateInformation()
+SupervisionManager --> Dashboard : consolidatedInformation
 deactivate SupervisionManager
 
-Dashboard --> Docente : mostrarDashboard()
+Dashboard --> Teacher : showDashboard()
 
-Docente -> Dashboard : seleccionarIncidencia(incidencia)
+Teacher -> Dashboard : selectIncident(incident)
 
-Dashboard -> EvidenceManager : visualizarEvidencia(incidencia)
+Dashboard -> EvidenceManager : viewEvidence(incident)
 activate EvidenceManager
 
-EvidenceManager -> Database : obtenerEvidencias(incidencia)
-activate Database
-Database --> EvidenceManager : evidencias
-deactivate Database
+EvidenceManager -> EvidenceRepository : getEvidence(incident)
+activate EvidenceRepository
+EvidenceRepository --> EvidenceManager : evidenceList
+deactivate EvidenceRepository
 
-EvidenceManager -> Evidence : prepararEvidencia(evidencias)
+EvidenceManager -> Evidence : prepareEvidence(evidenceList)
 activate Evidence
-Evidence --> EvidenceManager : evidenciaPreparada
+Evidence --> EvidenceManager : evidencePrepared
 deactivate Evidence
 
-alt Evidencia disponible
-  EvidenceManager --> Dashboard : evidenciaDisponible
-  Dashboard --> Docente : mostrarEvidencia()
-else Sin evidencia asociada
-  EvidenceManager --> Dashboard : evidenciaNoDisponible
-  Dashboard --> Docente : mostrarMensajeInformativo()
+alt Evidence available
+  EvidenceManager --> Dashboard : evidenceAvailable
+  Dashboard --> Teacher : showEvidence()
+else No associated evidence
+  EvidenceManager --> Dashboard : evidenceNotAvailable
+  Dashboard --> Teacher : showInformativeMessage()
 end
 
 deactivate EvidenceManager

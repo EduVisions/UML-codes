@@ -10,7 +10,7 @@ skinparam Arrow {
 }
 
 package "Intelligent Proctoring Context" {
-  class Incident <<E>> {
+  class Incident << (E,#2E7D32) >> {
     - id : IncidentId
     - examId : ExamId
     - studentId : UserId
@@ -23,8 +23,8 @@ package "Intelligent Proctoring Context" {
     + updateStatus(status : String)
   }
 
-  class Alert <<E>> {
-    - id : UUID
+  class Alert << (E,#2E7D32) >> {
+    - id : id
     - incidentId : IncidentId
     - type : String
     - message : String
@@ -35,8 +35,8 @@ package "Intelligent Proctoring Context" {
     + closeAlert()
   }
 
-  class Evidence <<E>> {
-    - id : UUID
+  class Evidence << (E,#2E7D32) >> {
+    - id : id
     - incidentId : IncidentId
     - mediaUrl : String
     - mediaType : String
@@ -45,8 +45,8 @@ package "Intelligent Proctoring Context" {
     + captureEvidence()
   }
 
-  class ConnectivityEvent <<E>> {
-    - id : UUID
+  class ConnectivityEvent << (E,#2E7D32) >> {
+    - id : id
     - examId : ExamId
     - studentId : UserId
     - startTime : LocalDateTime
@@ -60,16 +60,16 @@ package "Intelligent Proctoring Context" {
 }
 
 package "Shared Context" {
-  class IncidentId <<C>> {
-    - value : UUID
+  class IncidentId << (V,#2E7D32) >> {
+    - value : id
   }
 
-  class ExamId <<C>> {
-    - value : UUID
+  class ExamId << (V,#2E7D32) >> {
+    - value : id
   }
 
-  class UserId <<C>> {
-    - value : UUID
+  class UserId << (V,#2E7D32) >> {
+    - value : id
   }
 }
 

@@ -1,75 +1,75 @@
 @startuml "EduVerify - Level 4 Conceptual"
 left to right direction
 
-title EduVerify - Diagrama Conceptual UML
+title EduVerify - UML Conceptual Diagram
 
 skinparam classAttributeIconSize 0
 skinparam linetype ortho
 
-abstract class Usuario {
-  nombre
-  correo
+abstract class User {
+  name
+  email
 }
 
-class Docente {
-  especialidad
+class Teacher {
+  specialty
 }
 
-class Estudiante {
-  codigo
+class Student {
+  code
 }
 
-class Institucion {
-  nombre
+class Institution {
+  name
 }
 
-class Examen {
-  titulo
-  fecha
+class Exam {
+  title
+  date
 }
 
-class "Validacion de Identidad" as ValidacionIdentidad {
-  estado
-  fecha
+class "Identity Validation" as IdentityValidation {
+  status
+  date
 }
 
-class Incidencia {
-  tipo
-  fecha
+class Incident {
+  type
+  date
 }
 
-class Evidencia {
-  fechaRegistro
-  descripcion
+class Evidence {
+  registrationDate
+  description
 }
 
-class Justificacion {
-  motivo
-  fecha
+class Justification {
+  reason
+  date
 }
 
-class "Solicitud de Revision" as SolicitudRevision {
-  estado
-  fechaSolicitud
+class "Review Request" as ReviewRequest {
+  status
+  requestDate
 }
 
-class Reporte {
-  fechaGeneracion
-  resumen
+class Report {
+  generationDate
+  summary
 }
 
-Usuario <|-- Docente
-Usuario <|-- Estudiante
+User <|-- Teacher
+User <|-- Student
 
-Institucion "1" -- "0..*" Examen : administra
-Docente "1" -- "0..*" Examen : crea
-Estudiante "0..*" -- "0..*" Examen : participa en
-Estudiante "1" -- "0..*" ValidacionIdentidad : realiza
-Examen "1" -- "0..*" Incidencia : genera
-Incidencia "1" -- "0..*" Evidencia : registra
-Incidencia "1" -- "0..*" Justificacion : recibe
-Incidencia "1" -- "0..*" SolicitudRevision : origina
-Reporte "0..*" -- "1..*" Examen : resume
-Reporte "0..*" -- "0..*" Incidencia : analiza
+Institution "1" -- "0..*" Exam : manages
+Teacher "1" -- "0..*" Exam : creates
+Student "0..*" -- "0..*" Exam : participates in
+Student "1" -- "0..*" IdentityValidation : performs
+Exam "1" -- "0..*" Incident : generates
+Incident "1" -- "0..*" Evidence : records
+Incident "1" -- "0..*" Justification : receives
+Incident "1" -- "0..*" ReviewRequest : originates
+Report "0..*" -- "1..*" Exam : summarizes
+Report "0..*" -- "0..*" Incident : analyzes
 
 @enduml

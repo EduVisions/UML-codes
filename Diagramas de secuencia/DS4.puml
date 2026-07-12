@@ -1,104 +1,95 @@
-@startuml "Rendir examen supervisado"
+@startuml "Take Supervised Exam"
 
-actor "Estudiante" as Estudiante
-boundary "Interfaz de Examen" as UI
-control "Gestor de Evaluacion" as EvaluationManager
-control "Gestor de Supervision" as SupervisionManager
-control "Gestor de Identidad" as IdentityManager
-control "Gestor de Incidencias" as IncidentManager
-entity "Examen" as Exam
-entity "Incidencia" as Incident
-entity "Evidencia" as Evidence
-database "Repo EduVision" as Database
+actor "Student" as Student
+boundary "Exam Interface" as UI
+control "Evaluation Manager" as EvaluationManager
+control "Supervision Manager" as SupervisionManager
+control "Identity Manager" as IdentityManager
+control "Incident Manager" as IncidentManager
+entity "Exam" as Exam
+entity "Exam Session" as ExamSession
+database "Exam Repository" as ExamRepository
+database "Exam Session Repository" as ExamSessionRepository
 
-Estudiante -> UI : accederExamen()
+Student -> UI : accessExam()
 activate UI
 
-UI -> EvaluationManager : solicitarExamen()
+UI -> EvaluationManager : requestExam()
 activate EvaluationManager
 
-EvaluationManager -> Database : obtenerExamenProgramado()
-activate Database
-Database --> EvaluationManager : examenProgramado
-deactivate Database
+EvaluationManager -> ExamRepository : getScheduledExam()
+activate ExamRepository
+ExamRepository --> EvaluationManager : scheduledExam
+deactivate ExamRepository
 
-EvaluationManager -> Exam : prepararExamen(examenProgramado)
+EvaluationManager -> Exam : prepareExam(scheduledExam)
 activate Exam
-Exam --> EvaluationManager : examenPreparado
+Exam --> EvaluationManager : examPrepared
 deactivate Exam
 
-EvaluationManager --> UI : examenPreparado
+EvaluationManager -> ExamSession : startSession()
+activate ExamSession
+ExamSession --> EvaluationManager : sessionStarted
+deactivate ExamSession
+
+EvaluationManager --> UI : examPrepared
 deactivate EvaluationManager
 
-UI --> Estudiante : mostrarExamen()
+UI --> Student : showExam()
 
-UI -> SupervisionManager : iniciarSupervision()
+UI -> SupervisionManager : startSupervision()
 activate SupervisionManager
 
-SupervisionManager -> IdentityManager : validarIdentidad()
+SupervisionManager -> IdentityManager : validateIdentity()
 activate IdentityManager
-IdentityManager --> SupervisionManager : identidadVerificada
+IdentityManager --> SupervisionManager : identityVerified
 deactivate IdentityManager
 
-alt Identidad validada
-  SupervisionManager --> UI : supervisionActiva
-  UI --> Estudiante : continuarEvaluacion()
-else Posible incidencia detectada
-  SupervisionManager -> IncidentManager : registrarIncidencia()
-  activate IncidentManager
+alt Identity validated
+  SupervisionManager --> UI : supervisionActive
+  UI --> Student : continueEvaluation()
+else Possible incident detected
+  ref over SupervisionManager, IncidentManager : Incident detection during supervision
 
-  IncidentManager -> Evidence : generarEvidencia()
-  activate Evidence
-  Evidence --> IncidentManager : evidenciaGenerada
-  deactivate Evidence
-
-  IncidentManager -> Incident : crearIncidencia()
-  activate Incident
-  Incident --> IncidentManager : incidenciaCreada
-  deactivate Incident
-
-  IncidentManager -> Database : almacenarIncidencia(incidencia)
-  activate Database
-  Database --> IncidentManager : incidenciaRegistrada
-  deactivate Database
-
-  IncidentManager --> SupervisionManager : incidenciaRegistrada
-  deactivate IncidentManager
-
-  SupervisionManager --> UI : continuarMonitoreo()
+  SupervisionManager --> UI : continueMonitoring()
 end
 
-Estudiante -> UI : responderPreguntas(respuestas)
+Student -> UI : answerQuestions(answers)
 
-UI -> EvaluationManager : guardarRespuestas(respuestas)
+UI -> EvaluationManager : saveAnswers(answers)
 activate EvaluationManager
 
-EvaluationManager -> Database : registrarRespuestas(respuestas)
-activate Database
-Database --> EvaluationManager : respuestasRegistradas
-deactivate Database
+EvaluationManager -> ExamSessionRepository : registerAnswers(answers)
+activate ExamSessionRepository
+ExamSessionRepository --> EvaluationManager : answersRegistered
+deactivate ExamSessionRepository
 
-EvaluationManager --> UI : respuestasGuardadas
+EvaluationManager --> UI : answersSaved
 deactivate EvaluationManager
 
-UI -> SupervisionManager : registrarSupervision()
-SupervisionManager --> UI : monitoreoRegistrado
+UI -> SupervisionManager : registerSupervision()
+SupervisionManager --> UI : monitoringRegistered
 deactivate SupervisionManager
 
-Estudiante -> UI : entregarExamen()
+Student -> UI : submitExam()
 
-UI -> EvaluationManager : entregarExamen()
+UI -> EvaluationManager : submitExam()
 activate EvaluationManager
 
-EvaluationManager -> Database : registrarEntrega()
-activate Database
-Database --> EvaluationManager : entregaRegistrada
-deactivate Database
+EvaluationManager -> ExamSession : finishSession()
+activate ExamSession
+ExamSession --> EvaluationManager : sessionFinished
+deactivate ExamSession
 
-EvaluationManager --> UI : entregaExitosa
+EvaluationManager -> ExamSessionRepository : registerSubmission()
+activate ExamSessionRepository
+ExamSessionRepository --> EvaluationManager : submissionRegistered
+deactivate ExamSessionRepository
+
+EvaluationManager --> UI : submissionSuccessful
 deactivate EvaluationManager
 
-UI --> Estudiante : mostrarConfirmacion()
+UI --> Student : showConfirmation()
 deactivate UI
 
 @enduml

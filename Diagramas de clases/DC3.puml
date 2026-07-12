@@ -1,4 +1,4 @@
-@startuml classDiagram
+@startuml IAM Context
 
 skinparam class {
   BackgroundColor #FFF9C4
@@ -11,7 +11,7 @@ skinparam Arrow {
 
 package "Shared Context" {
     class "UserId" {
-        -value : UUID
+        -value : id
     }
 }
 

@@ -1,71 +1,72 @@
-@startuml "Crear examen supervisado"
+@startuml "Create Supervised Exam"
 
-actor "Docente" as Docente
-boundary "Interfaz de Examenes" as UI
-control "Gestor de Examenes" as ExamManager
-control "Gestor de Supervision" as SupervisionManager
-control "Gestor de Programacion" as ScheduleManager
-entity "Examen" as Exam
-entity "Configuracion de Supervision" as SupervisionConfig
-database "Repo EduVision" as Database
+actor "Teacher" as Teacher
+boundary "ExamInterface" as UI
+control "ExamManager" as ExamManager
+control "SupervisionManager" as SupervisionManager
+control "SchedulingManager" as ScheduleManager
+entity "Exam" as Exam
+entity "SupervisionConfiguration" as SupervisionConfig
+database "SupervisionConfigRepository" as SupervisionConfigRepository
+database "ExamRepository" as ExamRepository
 
-Docente -> UI : accederModuloExamenes()
+Teacher -> UI : accessExamModule()
 activate UI
 
-UI -> ExamManager : solicitarDatosIniciales()
+UI -> ExamManager : requestInitialData()
 activate ExamManager
 
-ExamManager -> SupervisionManager : consultarConfiguracionesDisponibles()
+ExamManager -> SupervisionManager : queryAvailableConfigurations()
 activate SupervisionManager
 
-SupervisionManager -> Database : obtenerConfiguracionesSupervision()
-activate Database
-Database --> SupervisionManager : configuracionesDisponibles
-deactivate Database
+SupervisionManager -> SupervisionConfigRepository : getSupervisionConfigurations()
+activate SupervisionConfigRepository
+SupervisionConfigRepository --> SupervisionManager : availableConfigurations
+deactivate SupervisionConfigRepository
 
-SupervisionManager --> ExamManager : configuracionesDisponibles
+SupervisionManager --> ExamManager : availableConfigurations
 deactivate SupervisionManager
 
-ExamManager --> UI : datosIniciales
+ExamManager --> UI : initialData
 deactivate ExamManager
 
-UI --> Docente : mostrarFormularioExamen()
+UI --> Teacher : showExamForm()
 
-Docente -> UI : crearExamen(datos)
+Teacher -> UI : createExam(data)
 
-UI -> ExamManager : crearExamen(datos)
+UI -> ExamManager : createExam(data)
 activate ExamManager
 
-ExamManager -> Exam : crear(datos)
+ExamManager -> Exam : create(data)
 activate Exam
-Exam --> ExamManager : examenCreado
+Exam --> ExamManager : examCreated
 deactivate Exam
 
-ExamManager -> SupervisionManager : configurarSupervision(parametros)
+ExamManager -> SupervisionManager : configureSupervision(parameters)
 activate SupervisionManager
 
-SupervisionManager -> SupervisionConfig : crearConfiguracion(parametros)
+SupervisionManager -> SupervisionConfig : createConfiguration(parameters)
 activate SupervisionConfig
-SupervisionConfig --> SupervisionManager : configuracionCreada
+SupervisionConfig --> SupervisionManager : configurationCreated
 deactivate SupervisionConfig
 
-SupervisionManager --> ExamManager : supervisionConfigurada
+SupervisionManager --> ExamManager : supervisionConfigured
 deactivate SupervisionManager
 
-ExamManager -> ScheduleManager : programarExamen(fechaHora)
+ExamManager -> ScheduleManager : scheduleExam(dateTime)
 activate ScheduleManager
-ScheduleManager --> ExamManager : programacionConfirmada
+ScheduleManager --> ExamManager : schedulingConfirmed
 deactivate ScheduleManager
 
-ExamManager -> Database : registrarExamen(examen)
-activate Database
-Database --> ExamManager : examenRegistrado
-deactivate Database
+ExamManager -> ExamRepository : registerExam(exam)
+activate ExamRepository
+ExamRepository --> ExamManager : examRegistered
+deactivate ExamRepository
 
-ExamManager --> UI : creacionExitosa
+ExamManager --> UI : creationSuccessful
 deactivate ExamManager
 
-UI --> Docente : mostrarConfirmacion()
+UI --> Teacher : showConfirmation()
 deactivate UI
 
 @enduml

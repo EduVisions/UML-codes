@@ -17,37 +17,37 @@ skinparam Arrow {
 actor "Docente" as Docente
 
 rectangle "EduVerify" {
-  usecase "Visualizar dashboard de supervision" as UC_Dashboard
+  usecase "Visualizar dashboard de supervision" as ucDashboard
 
-  usecase "Consultar alertas activas" as UC_Alertas
-  usecase "Visualizar incidencias detectadas" as UC_Incidencias
-  usecase "Visualizar evidencia de incidencia" as UC_Evidencia
-  usecase "Consultar estado de examenes supervisados" as UC_Estado
-  usecase "Consultar actividad de estudiantes" as UC_Actividad
-  usecase "Actualizar informacion del dashboard" as UC_Actualizar
+  usecase "Consultar alertas activas" as ucAlertas
+  usecase "Visualizar incidencias detectadas" as ucIncidencias
+  usecase "Visualizar evidencia de incidencia" as ucEvidencia
+  usecase "Consultar estado de examenes supervisados" as ucEstado
+  usecase "Consultar actividad de estudiantes" as ucActividad
+  usecase "Actualizar informacion del dashboard" as ucActualizar
 
-  usecase "Gestionar alertas e incidencias" as UC_Gestionar
-  usecase "Generar reporte de incidencias" as UC_Reporte
-  usecase "Reportar plagio de estudiante" as UC_Plagio
-  usecase "Solicitar revision de incidencia" as UC_Revision
-  usecase "Filtrar incidencias por examen" as UC_FiltrarExamen
-  usecase "Filtrar incidencias por estudiante" as UC_FiltrarEstudiante
+  usecase "Gestionar alertas e incidencias" as ucGestionar
+  usecase "Generar reporte de incidencias" as ucReporte
+  usecase "Reportar plagio de estudiante" as ucPlagio
+  usecase "Solicitar revision de incidencia" as ucRevision
+  usecase "Filtrar incidencias por examen" as ucFiltrarExamen
+  usecase "Filtrar incidencias por estudiante" as ucFiltrarEstudiante
 }
 
-Docente -- UC_Dashboard
+Docente -- ucDashboard
 
-UC_Dashboard -- UC_Alertas : <<include>>
-UC_Dashboard -- UC_Incidencias : <<include>>
-UC_Dashboard -- UC_Evidencia : <<include>>
-UC_Dashboard -- UC_Estado : <<include>>
-UC_Dashboard -- UC_Actividad : <<include>>
-UC_Dashboard -- UC_Actualizar : <<include>>
+ucDashboard -- ucAlertas : <<include>>
+ucDashboard -- ucIncidencias : <<include>>
+ucDashboard -- ucEvidencia : <<include>>
+ucDashboard -- ucEstado : <<include>>
+ucDashboard -- ucActividad : <<include>>
+ucDashboard -- ucActualizar : <<include>>
 
-UC_Dashboard -- UC_Gestionar : <<extend>>
-UC_Dashboard -- UC_Reporte : <<extend>>
-UC_Evidencia -- UC_Plagio : <<extend>>
-UC_Incidencias -- UC_Revision : <<extend>>
-UC_Incidencias -- UC_FiltrarExamen : <<extend>>
-UC_Incidencias -- UC_FiltrarEstudiante : <<extend>>
+ucDashboard -- ucGestionar : <<extend>>
+ucDashboard -- ucReporte : <<extend>>
+ucEvidencia -- ucPlagio : <<extend>>
+ucIncidencias -- ucRevision : <<extend>>
+ucIncidencias -- ucFiltrarExamen : <<extend>>
+ucIncidencias -- ucFiltrarEstudiante : <<extend>>
 
 @enduml
