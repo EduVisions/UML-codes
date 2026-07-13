@@ -1,4 +1,4 @@
-@startuml classDiagram
+@startuml "IAM Database"
 
 skinparam class {
   BackgroundColor #FFF9C4
@@ -8,44 +8,35 @@ skinparam class {
 skinparam Arrow {
   Color #7A1631
 }
+skinparam linetype ortho
 
-package "Shared Context" {
-    class "UserId" {
-        -value : UUID
-    }
+entity users {
+    *id: BIGINT <<PK>>
+    --
+    *email: VARCHAR(255)
+    *password_hash: VARCHAR(255)
+    *role: VARCHAR(50)
+    *created_at: DATETIME
+    *updated_at: DATETIME
 }
 
-package "IAM Context" {
-    entity "User" {
-        -id : UserId
-        --
-        -email : String
-        -passwordHash : String
-        -role : String
-        --
-        +login()
-        +logout()
-    }
-
-    entity "Student" {
-        -userId : UserId
-        --
-        -studentCode : String
-        -enrollmentDate : LocalDate
-        --
-        +verifyIdentity()
-    }
-
-    entity "Teacher" {
-        -userId : UserId
-        --
-        -hireDate : LocalDate
-        --
-        +assignRole()
-    }
+entity students {
+    *user_id: BIGINT <<PK, FK>>
+    --
+    *student_code: VARCHAR(50)
+    *enrollment_date: DATE
+    *created_at: DATETIME
+    *updated_at: DATETIME
 }
 
-User --> "1" UserId
-Student --> "1" UserId
-Teacher --> "1" UserId
+entity teachers {
+    *user_id: BIGINT <<PK, FK>>
+    --
+    *hire_date: DATE
+    *created_at: DATETIME
+    *updated_at: DATETIME
+}
+
+users ||--o| students
+users ||--o| teachers
 @enduml
