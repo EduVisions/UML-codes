@@ -1,4 +1,4 @@
-@startuml classDiagram
+@startuml "Incident Detection Database"
 
 skinparam class {
   BackgroundColor #FFF9C4
@@ -8,44 +8,30 @@ skinparam class {
 skinparam Arrow {
   Color #7A1631
 }
+skinparam linetype ortho
 
-package "Shared Context" {
-    class "UserId" {
-        -value : UUID
-    }
+entity incidents {
+    *id: BIGINT <<PK>>
+    --
+    *exam_id: BIGINT
+    *student_id: BIGINT
+    *timestamp: DATETIME
+    *severity: VARCHAR(50)
+    *description: TEXT
+    *status: VARCHAR(50)
+    *created_at: DATETIME
+    updated_at: DATETIME
 }
 
-package "IAM Context" {
-    entity "User" {
-        -id : UserId
-        --
-        -email : String
-        -passwordHash : String
-        -role : String
-        --
-        +login()
-        +logout()
-    }
-
-    entity "Student" {
-        -userId : UserId
-        --
-        -studentCode : String
-        -enrollmentDate : LocalDate
-        --
-        +verifyIdentity()
-    }
-
-    entity "Teacher" {
-        -userId : UserId
-        --
-        -hireDate : LocalDate
-        --
-        +assignRole()
-    }
+entity evidences {
+    *id: BIGINT <<PK>>
+    --
+    *incident_id: BIGINT <<FK>>
+    *media_url: VARCHAR(512)
+    *media_type: VARCHAR(50)
+    *captured_at: DATETIME
+    *created_at: DATETIME
 }
 
-User --> "1" UserId
-Student --> "1" UserId
-Teacher --> "1" UserId
+incidents ||-right-|{ evidences
 @enduml

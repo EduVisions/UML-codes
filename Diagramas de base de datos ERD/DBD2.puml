@@ -1,4 +1,4 @@
-@startuml classDiagram
+@startuml "Academic Management Database"
 
 skinparam class {
   BackgroundColor #FFF9C4
@@ -8,44 +8,40 @@ skinparam class {
 skinparam Arrow {
   Color #7A1631
 }
+skinparam linetype ortho
 
-package "Shared Context" {
-    class "UserId" {
-        -value : UUID
-    }
+entity institutions {
+    *id: BIGINT <<PK>>
+    --
+    *name: VARCHAR(150)
+    *contact_email: VARCHAR(255)
+    *created_at: DATETIME
+    updated_at: DATETIME
 }
 
-package "IAM Context" {
-    entity "User" {
-        -id : UserId
-        --
-        -email : String
-        -passwordHash : String
-        -role : String
-        --
-        +login()
-        +logout()
-    }
-
-    entity "Student" {
-        -userId : UserId
-        --
-        -studentCode : String
-        -enrollmentDate : LocalDate
-        --
-        +verifyIdentity()
-    }
-
-    entity "Teacher" {
-        -userId : UserId
-        --
-        -hireDate : LocalDate
-        --
-        +assignRole()
-    }
+entity courses {
+    *id: BIGINT <<PK>>
+    --
+    *institution_id: BIGINT <<FK>>
+    *name: VARCHAR(100)
+    *code: VARCHAR(50)
+    *created_at: DATETIME
+    updated_at: DATETIME
 }
 
-User --> "1" UserId
-Student --> "1" UserId
-Teacher --> "1" UserId
+entity exams {
+    *id: BIGINT <<PK>>
+    --
+    *course_id: BIGINT <<FK>>
+    *teacher_id: BIGINT
+    *title: VARCHAR(150)
+    *scheduled_date: DATETIME
+    *duration_minutes: INT
+    *supervision_rules: TEXT
+    *created_at: DATETIME
+    updated_at: DATETIME
+}
+
+institutions ||--o{ courses
+courses ||--o{ exams
 @enduml
