@@ -1,0 +1,56 @@
+@startuml DCOM1
+skinparam componentStyle uml2
+skinparam linetype ortho
+
+component "Frontend" as Frontend <<external>>
+component "Identity Access Management" as IAM <<external>>
+component "Institution Management" as InstitutionManagement <<external>>
+database "Relational Database" as RelationalDatabase <<external>>
+
+interface "IUsers" as IUsers
+interface "IIdentityAccessManagement" as IIAMPort
+interface "IInstitutionManagement" as IInstitutionPort
+
+component "Users Bounded Context" as UsersBC {
+
+  component "Interface Layer" as InterfaceLayer {
+    component "UserController" as UserController
+    component "UserProfileController" as UserProfileController
+  }
+
+  component "Application Layer" as ApplicationLayer {
+    component "RegisterUserUseCase" as RegisterUserUseCase
+    component "GetUserUseCase" as GetUserUseCase
+    component "UpdateUserProfileUseCase" as UpdateUserProfileUseCase
+  }
+
+  component "Domain Layer" as DomainLayer {
+    component "User" as User <<aggregate root>>
+    interface "UserRepository" as UserRepository <<repository>>
+  }
+
+  component "Infrastructure Layer" as InfrastructureLayer {
+    component "PostgresUserRepository" as PostgresUserRepository <<adapter>>
+    component "IdentityManagementAdapter" as IdentityManagementAdapter <<adapter>>
+    component "InstitutionManagementAdapter" as InstitutionManagementAdapter <<adapter>>
+  }
+}
+
+UserController -- IUsers
+UserProfileController -- IUsers
+Frontend --( IUsers
+
+UserController --> RegisterUserUseCase : invokes
+UserController --> GetUserUseCase : invokes
+UserProfileController --> UpdateUserProfileUseCase : invokes
+ApplicationLayer ..> UserRepository : uses
+
+PostgresUserRepository ..|> UserRepository : implements
+PostgresUserRepository --> RelationalDatabase : accesses
+
+IAM -- IIAMPort
+InstitutionManagement -- IInstitutionPort
+IdentityManagementAdapter --( IIAMPort
+InstitutionManagementAdapter --( IInstitutionPort
+
+@enduml

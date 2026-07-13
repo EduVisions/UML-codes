@@ -1,0 +1,76 @@
+@startuml DCOM8
+skinparam componentStyle uml2
+skinparam linetype ortho
+
+component "Frontend" as Frontend <<external>>
+component "Camera Device" as CameraDevice <<device>>
+component "Message Broker" as MessageBroker <<external>>
+component "MediaPipe" as MediaPipe <<external>>
+component "Exams" as Exams <<external>>
+component "Incident Management" as IncidentManagement <<external>>
+component "Evidence Management" as EvidenceManagement <<external>>
+component "Audit & Logging" as AuditLogging <<external>>
+component "Identity Access Management" as IAM <<external>>
+database "Relational Database" as RelationalDatabase <<external>>
+
+interface "IIncidentDetection" as IIncidentDetection
+interface "IDetectionEventIngestion" as IDetectionEventIngestion
+interface "IExams" as IExamsPort
+interface "IIncidentManagement" as IIncidentManagementPort
+interface "IEvidenceManagement" as IEvidenceManagementPort
+interface "IAuditLogging" as IAuditLoggingPort
+interface "IMessageBroker" as IMessageBrokerPort
+interface "IMediaPipe" as IMediaPipePort
+interface "IIdentityAccessManagement" as IIAMPort
+
+component "Incident Detection Bounded Context" as DetectionBC {
+
+  component "Interface Layer" as InterfaceLayer {
+    component "MonitoringEventController" as MonitoringEventController
+    component "CameraSignalConsumer" as CameraSignalConsumer <<consumer>>
+  }
+
+  component "Application Layer" as ApplicationLayer {
+    component "ProcessMonitoringEventUseCase" as ProcessMonitoringEventUseCase
+    component "CreateIncidentCandidateUseCase" as CreateIncidentCandidateUseCase
+  }
+
+  component "Domain Layer" as DomainLayer {
+    component "DetectionSession" as DetectionSession <<aggregate root>>
+    interface "DetectionSessionRepository" as DetectionSessionRepository <<repository>>
+  }
+
+  component "Infrastructure Layer" as InfrastructureLayer {
+    component "PostgresDetectionSessionRepository" as PostgresDetectionSessionRepository <<adapter>>
+    component "MediaPipeDetectionAdapter" as MediaPipeDetectionAdapter <<adapter>>
+    component "IncidentManagementAdapter" as IncidentManagementAdapter <<adapter>>
+  }
+}
+
+MonitoringEventController -- IIncidentDetection
+CameraSignalConsumer -- IDetectionEventIngestion
+Frontend --( IIncidentDetection
+CameraDevice --( IDetectionEventIngestion
+MessageBroker --( IDetectionEventIngestion
+
+CameraSignalConsumer --> ProcessMonitoringEventUseCase : invokes
+CreateIncidentCandidateUseCase --> DetectionSessionRepository : uses
+
+PostgresDetectionSessionRepository ..|> DetectionSessionRepository : implements
+PostgresDetectionSessionRepository --> RelationalDatabase : accesses
+
+MediaPipe -- IMediaPipePort
+MessageBroker -- IMessageBrokerPort
+Exams -- IExamsPort
+IncidentManagement -- IIncidentManagementPort
+EvidenceManagement -- IEvidenceManagementPort
+AuditLogging -- IAuditLoggingPort
+IAM -- IIAMPort
+MediaPipeDetectionAdapter --( IMediaPipePort
+IncidentManagementAdapter --( IIncidentManagementPort
+InfrastructureLayer --( IExamsPort
+InfrastructureLayer --( IEvidenceManagementPort
+InfrastructureLayer --( IAuditLoggingPort
+InfrastructureLayer --( IIAMPort
+
+@enduml

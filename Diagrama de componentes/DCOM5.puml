@@ -1,0 +1,74 @@
+@startuml DCOM5
+skinparam componentStyle uml2
+skinparam linetype ortho
+
+component "Frontend" as Frontend <<external>>
+component "Incident Management" as IncidentManagement <<external>>
+component "Exams" as Exams <<external>>
+component "Users" as Users <<external>>
+component "Identity Access Management" as IAM <<external>>
+component "Audit & Logging" as AuditLogging <<external>>
+component "Object Storage" as ObjectStorage <<external>>
+database "Relational Database" as RelationalDatabase <<external>>
+
+interface "IEvidenceManagement" as IEvidenceManagement
+interface "IEvidenceIngestion" as IEvidenceIngestion
+interface "IIncidentManagement" as IIncidentManagementPort
+interface "IExams" as IExamsPort
+interface "IUsers" as IUsersPort
+interface "IIdentityAccessManagement" as IIAMPort
+interface "IAuditLogging" as IAuditLoggingPort
+interface "IObjectStorage" as IObjectStoragePort
+
+component "Evidence Management Bounded Context" as EvidenceBC {
+
+  component "Interface Layer" as InterfaceLayer {
+    component "EvidenceController" as EvidenceController
+    component "EvidenceEventConsumer" as EvidenceEventConsumer <<consumer>>
+  }
+
+  component "Application Layer" as ApplicationLayer {
+    component "RegisterEvidenceUseCase" as RegisterEvidenceUseCase
+    component "GetEvidenceUseCase" as GetEvidenceUseCase
+  }
+
+  component "Domain Layer" as DomainLayer {
+    component "Evidence" as Evidence <<aggregate root>>
+    interface "EvidenceRepository" as EvidenceRepository <<repository>>
+    interface "EvidenceStorage" as EvidenceStorage <<storage>>
+  }
+
+  component "Infrastructure Layer" as InfrastructureLayer {
+    component "PostgresEvidenceRepository" as PostgresEvidenceRepository <<adapter>>
+    component "ObjectStorageAdapter" as ObjectStorageAdapter <<adapter>>
+  }
+}
+
+EvidenceController -- IEvidenceManagement
+EvidenceEventConsumer -- IEvidenceIngestion
+Frontend --( IEvidenceManagement
+IncidentManagement --( IEvidenceIngestion
+
+EvidenceController --> RegisterEvidenceUseCase : invokes
+EvidenceEventConsumer --> RegisterEvidenceUseCase : invokes
+RegisterEvidenceUseCase --> EvidenceRepository : uses
+GetEvidenceUseCase --> EvidenceRepository : uses
+
+PostgresEvidenceRepository ..|> EvidenceRepository : implements
+ObjectStorageAdapter ..|> EvidenceStorage : implements
+PostgresEvidenceRepository --> RelationalDatabase : accesses
+
+IncidentManagement -- IIncidentManagementPort
+Exams -- IExamsPort
+Users -- IUsersPort
+IAM -- IIAMPort
+AuditLogging -- IAuditLoggingPort
+ObjectStorage -- IObjectStoragePort
+InfrastructureLayer --( IIncidentManagementPort
+InfrastructureLayer --( IExamsPort
+InfrastructureLayer --( IUsersPort
+InfrastructureLayer --( IIAMPort
+InfrastructureLayer --( IAuditLoggingPort
+ObjectStorageAdapter --( IObjectStoragePort
+
+@enduml

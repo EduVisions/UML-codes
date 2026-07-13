@@ -1,0 +1,88 @@
+@startuml DCOM7
+skinparam componentStyle uml2
+skinparam linetype ortho
+
+component "Frontend" as Frontend <<external>>
+component "Exams" as Exams <<external>>
+component "Incident Management" as IncidentManagement <<external>>
+component "Evidence Management" as EvidenceManagement <<external>>
+component "Users" as Users <<external>>
+component "Institution Management" as InstitutionManagement <<external>>
+component "Identity Access Management" as IAM <<external>>
+component "Audit & Logging" as AuditLogging <<external>>
+component "Notification Management" as NotificationManagement <<external>>
+component "Document Storage" as DocumentStorage <<external>>
+database "Relational Database" as RelationalDatabase <<external>>
+
+interface "IReportGeneration" as IReportGeneration
+interface "IReportGenerationEvents" as IReportGenerationEvents
+interface "IExams" as IExamsPort
+interface "IIncidentManagement" as IIncidentManagementPort
+interface "IEvidenceManagement" as IEvidenceManagementPort
+interface "IUsers" as IUsersPort
+interface "IInstitutionManagement" as IInstitutionPort
+interface "IIdentityAccessManagement" as IIAMPort
+interface "IAuditLogging" as IAuditLoggingPort
+interface "INotificationManagement" as INotificationPort
+interface "IDocumentStorage" as IDocumentStoragePort
+
+component "Report Generation Bounded Context" as ReportBC {
+
+  component "Interface Layer" as InterfaceLayer {
+    component "ReportController" as ReportController
+    component "ReportEventConsumer" as ReportEventConsumer <<consumer>>
+  }
+
+  component "Application Layer" as ApplicationLayer {
+    component "GenerateExamReportUseCase" as GenerateExamReportUseCase
+    component "ExportReportUseCase" as ExportReportUseCase
+  }
+
+  component "Domain Layer" as DomainLayer {
+    component "Report" as Report <<aggregate root>>
+    interface "ReportRepository" as ReportRepository <<repository>>
+    interface "ReportDocumentGenerator" as ReportDocumentGenerator
+  }
+
+  component "Infrastructure Layer" as InfrastructureLayer {
+    component "PostgresReportRepository" as PostgresReportRepository <<adapter>>
+    component "PdfReportGeneratorAdapter" as PdfReportGeneratorAdapter <<adapter>>
+  }
+}
+
+ReportController -- IReportGeneration
+ReportEventConsumer -- IReportGenerationEvents
+Frontend --( IReportGeneration
+Exams --( IReportGenerationEvents
+IncidentManagement --( IReportGenerationEvents
+EvidenceManagement --( IReportGenerationEvents
+
+ReportController --> GenerateExamReportUseCase : invokes
+ReportEventConsumer --> GenerateExamReportUseCase : invokes
+GenerateExamReportUseCase --> ReportRepository : uses
+ExportReportUseCase --> ReportDocumentGenerator : uses
+
+PostgresReportRepository ..|> ReportRepository : implements
+PdfReportGeneratorAdapter ..|> ReportDocumentGenerator : implements
+PostgresReportRepository --> RelationalDatabase : accesses
+
+Exams -- IExamsPort
+IncidentManagement -- IIncidentManagementPort
+EvidenceManagement -- IEvidenceManagementPort
+Users -- IUsersPort
+InstitutionManagement -- IInstitutionPort
+IAM -- IIAMPort
+AuditLogging -- IAuditLoggingPort
+NotificationManagement -- INotificationPort
+DocumentStorage -- IDocumentStoragePort
+InfrastructureLayer --( IExamsPort
+InfrastructureLayer --( IIncidentManagementPort
+InfrastructureLayer --( IEvidenceManagementPort
+InfrastructureLayer --( IUsersPort
+InfrastructureLayer --( IInstitutionPort
+InfrastructureLayer --( IIAMPort
+InfrastructureLayer --( IAuditLoggingPort
+InfrastructureLayer --( INotificationPort
+InfrastructureLayer --( IDocumentStoragePort
+
+@enduml
