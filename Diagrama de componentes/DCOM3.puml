@@ -1,0 +1,56 @@
+@startuml DCOM3
+skinparam componentStyle uml2
+skinparam linetype ortho
+
+component "Frontend" as Frontend <<external>>
+component "Users" as Users <<external>>
+component "Identity Access Management" as IAM <<external>>
+database "Relational Database" as RelationalDatabase <<external>>
+
+interface "IInstitutionManagement" as IInstitutionManagement
+interface "IUsers" as IUsersPort
+interface "IIdentityAccessManagement" as IIAMPort
+
+component "Institution Management Bounded Context" as InstitutionBC {
+
+  component "Interface Layer" as InterfaceLayer {
+    component "InstitutionController" as InstitutionController
+    component "AcademicUnitController" as AcademicUnitController
+  }
+
+  component "Application Layer" as ApplicationLayer {
+    component "RegisterInstitutionUseCase" as RegisterInstitutionUseCase
+    component "CreateAcademicUnitUseCase" as CreateAcademicUnitUseCase
+  }
+
+  component "Domain Layer" as DomainLayer {
+    component "Institution" as Institution <<aggregate root>>
+    interface "InstitutionRepository" as InstitutionRepository <<repository>>
+    interface "AcademicUnitRepository" as AcademicUnitRepository <<repository>>
+  }
+
+  component "Infrastructure Layer" as InfrastructureLayer {
+    component "PostgresInstitutionRepository" as PostgresInstitutionRepository <<adapter>>
+    component "UsersAdapter" as UsersAdapter <<adapter>>
+    component "IdentityManagementAdapter" as IdentityManagementAdapter <<adapter>>
+  }
+}
+
+InstitutionController -- IInstitutionManagement
+AcademicUnitController -- IInstitutionManagement
+Frontend --( IInstitutionManagement
+
+InstitutionController --> RegisterInstitutionUseCase : invokes
+AcademicUnitController --> CreateAcademicUnitUseCase : invokes
+RegisterInstitutionUseCase --> InstitutionRepository : uses
+CreateAcademicUnitUseCase --> AcademicUnitRepository : uses
+
+PostgresInstitutionRepository ..|> InstitutionRepository : implements
+PostgresInstitutionRepository --> RelationalDatabase : accesses
+
+Users -- IUsersPort
+IAM -- IIAMPort
+UsersAdapter --( IUsersPort
+IdentityManagementAdapter --( IIAMPort
+
+@enduml

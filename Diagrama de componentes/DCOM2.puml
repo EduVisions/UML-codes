@@ -1,0 +1,55 @@
+@startuml DCOM2
+skinparam componentStyle uml2
+skinparam linetype ortho
+
+component "Frontend" as Frontend <<external>>
+component "Users" as Users <<external>>
+component "Institution Management" as InstitutionManagement <<external>>
+database "Relational Database" as RelationalDatabase <<external>>
+
+interface "IExams" as IExams
+interface "IUsers" as IUsersPort
+interface "IInstitutionManagement" as IInstitutionPort
+
+component "Exams Bounded Context" as ExamsBC {
+
+  component "Interface Layer" as InterfaceLayer {
+    component "ExamController" as ExamController
+    component "ExamScheduleController" as ExamScheduleController
+  }
+
+  component "Application Layer" as ApplicationLayer {
+    component "CreateExamUseCase" as CreateExamUseCase
+    component "ScheduleExamUseCase" as ScheduleExamUseCase
+    component "ConfigureExamUseCase" as ConfigureExamUseCase
+  }
+
+  component "Domain Layer" as DomainLayer {
+    component "Exam" as Exam <<aggregate root>>
+    interface "ExamRepository" as ExamRepository <<repository>>
+  }
+
+  component "Infrastructure Layer" as InfrastructureLayer {
+    component "PostgresExamRepository" as PostgresExamRepository <<adapter>>
+    component "UserAdapter" as UserAdapter <<adapter>>
+    component "InstitutionAdapter" as InstitutionAdapter <<adapter>>
+  }
+}
+
+ExamController -- IExams
+ExamScheduleController -- IExams
+Frontend --( IExams
+
+ExamController --> CreateExamUseCase : invokes
+ExamScheduleController --> ScheduleExamUseCase : invokes
+ApplicationLayer ..> ExamRepository : uses
+
+PostgresExamRepository ..|> ExamRepository : implements
+PostgresExamRepository --> RelationalDatabase : accesses
+
+Users -- IUsersPort
+InstitutionManagement -- IInstitutionPort
+UserAdapter --( IUsersPort
+InstitutionAdapter --( IInstitutionPort
+
+@enduml

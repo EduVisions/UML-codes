@@ -1,18 +1,17 @@
 @startuml ""
 skinparam linetype ortho
 
-node "Web Client" as WebClient
-
-node "Mobile Device" as MobileDevice {
-  artifact "Mobile App" as MobileApp
-}
-
-node "Amazon S3\n(Static Website Hosting)" as S3Static {
-  artifact "Landing Page" as LandingPage
+node "Browser" as Browser {
   artifact "Single Page Application" as SPA
 }
 
-node "Application Load Balancer" as ALB
+node "GitHub Pages" as GitHubPages {
+  artifact "Landing Page" as LandingPage
+}
+
+node "Amazon S3\n(Static Website Hosting)" as S3Static {
+  artifact "Web App" as WebApp
+}
 
 node "Application Server (EC2)" as ApplicationServer {
   artifact "API Application" as APIApplication
@@ -26,10 +25,9 @@ node "Amazon S3\n(Evidence Storage)" as S3Evidence {
   artifact "Evidence Files" as EvidenceFiles
 }
 
-WebClient --> S3Static : HTTPS
-WebClient --> ALB : HTTPS
-MobileDevice --> ALB : HTTPS
-ALB --> ApplicationServer : HTTP
+Browser --> S3Static : HTTPS
+Browser --> GitHubPages : HTTPS
+SPA --> ApplicationServer : HTTPS
 ApplicationServer --> DatabaseServer
 ApplicationServer --> S3Evidence : Stores evidence
 

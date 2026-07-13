@@ -1,0 +1,57 @@
+@startuml DCOM4
+skinparam componentStyle uml2
+skinparam linetype ortho
+
+component "Frontend" as Frontend <<external>>
+component "Other Bounded Contexts" as OtherBoundedContexts <<external>>
+component "Message Broker" as MessageBroker <<external>>
+component "Logging Platform" as LoggingPlatform <<external>>
+database "Relational Database" as RelationalDatabase <<external>>
+
+interface "IAuditLogging" as IAuditLogging
+interface "IAuditEventIngestion" as IAuditEventIngestion
+interface "IMessageBroker" as IMessageBrokerPort
+interface "ILoggingPlatform" as ILoggingPlatformPort
+
+component "Audit & Logging Bounded Context" as AuditBC {
+
+  component "Interface Layer" as InterfaceLayer {
+    component "AuditEventController" as AuditEventController
+    component "AuditEventConsumer" as AuditEventConsumer <<consumer>>
+  }
+
+  component "Application Layer" as ApplicationLayer {
+    component "RecordAuditEventUseCase" as RecordAuditEventUseCase
+    component "SearchAuditEventsUseCase" as SearchAuditEventsUseCase
+  }
+
+  component "Domain Layer" as DomainLayer {
+    component "AuditEvent" as AuditEvent <<aggregate root>>
+    interface "AuditEventRepository" as AuditEventRepository <<repository>>
+  }
+
+  component "Infrastructure Layer" as InfrastructureLayer {
+    component "PostgresAuditEventRepository" as PostgresAuditEventRepository <<adapter>>
+    component "MessageBrokerAuditConsumer" as MessageBrokerAuditConsumer <<consumer>>
+    component "StructuredLogAdapter" as StructuredLogAdapter <<adapter>>
+  }
+}
+
+AuditEventController -- IAuditLogging
+AuditEventConsumer -- IAuditEventIngestion
+Frontend --( IAuditLogging
+OtherBoundedContexts --( IAuditEventIngestion
+
+AuditEventController --> SearchAuditEventsUseCase : invokes
+AuditEventConsumer --> RecordAuditEventUseCase : invokes
+ApplicationLayer ..> AuditEventRepository : uses
+
+PostgresAuditEventRepository ..|> AuditEventRepository : implements
+PostgresAuditEventRepository --> RelationalDatabase : accesses
+
+MessageBroker -- IMessageBrokerPort
+LoggingPlatform -- ILoggingPlatformPort
+MessageBrokerAuditConsumer --( IMessageBrokerPort
+StructuredLogAdapter --( ILoggingPlatformPort
+
+@enduml

@@ -1,0 +1,53 @@
+@startuml DCOM6
+skinparam componentStyle uml2
+skinparam linetype ortho
+
+component "Frontend" as Frontend <<external>>
+component "Users" as Users <<external>>
+component "Institution Management" as InstitutionManagement <<external>>
+database "Relational Database" as RelationalDatabase <<external>>
+
+interface "IIdentityAccessManagement" as IIdentityAccessManagement
+interface "IUsers" as IUsersPort
+interface "IInstitutionManagement" as IInstitutionPort
+
+component "Identity Access Management Bounded Context" as IAMBC {
+
+  component "Interface Layer" as InterfaceLayer {
+    component "AuthenticationController" as AuthenticationController
+    component "TokenController" as TokenController
+  }
+
+  component "Application Layer" as ApplicationLayer {
+    component "AuthenticateUserUseCase" as AuthenticateUserUseCase
+    component "AuthorizeAccessUseCase" as AuthorizeAccessUseCase
+  }
+
+  component "Domain Layer" as DomainLayer {
+    component "Identity" as Identity <<aggregate root>>
+    interface "IdentityRepository" as IdentityRepository <<repository>>
+  }
+
+  component "Infrastructure Layer" as InfrastructureLayer {
+    component "PostgresIdentityRepository" as PostgresIdentityRepository <<adapter>>
+    component "JwtTokenProvider" as JwtTokenProvider <<provider>>
+  }
+}
+
+AuthenticationController -- IIdentityAccessManagement
+TokenController -- IIdentityAccessManagement
+Frontend --( IIdentityAccessManagement
+
+AuthenticationController --> AuthenticateUserUseCase : invokes
+AuthenticateUserUseCase --> IdentityRepository : uses
+ApplicationLayer ..> IdentityRepository : uses
+
+PostgresIdentityRepository ..|> IdentityRepository : implements
+PostgresIdentityRepository --> RelationalDatabase : accesses
+
+Users -- IUsersPort
+InstitutionManagement -- IInstitutionPort
+IAMBC ..> IUsersPort : may require
+IAMBC ..> IInstitutionPort : may require
+
+@enduml

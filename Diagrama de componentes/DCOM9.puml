@@ -1,0 +1,82 @@
+@startuml DCOM9
+skinparam componentStyle uml2
+skinparam linetype ortho
+
+component "Frontend" as Frontend <<external>>
+component "Incident Detection" as IncidentDetection <<external>>
+component "Report Generation" as ReportGeneration <<external>>
+component "Evidence Management" as EvidenceManagement <<external>>
+component "Users" as Users <<external>>
+component "Exams" as Exams <<external>>
+component "Identity Access Management" as IAM <<external>>
+component "Audit & Logging" as AuditLogging <<external>>
+component "Message Broker" as MessageBroker <<external>>
+component "Email Service" as EmailService <<external>>
+database "Relational Database" as RelationalDatabase <<external>>
+
+interface "IAlertManagement" as IAlertManagement
+interface "IAlertEventReceiver" as IAlertEventReceiver
+interface "IUsers" as IUsersPort
+interface "IExams" as IExamsPort
+interface "IIncidentDetection" as IIncidentDetectionPort
+interface "IEvidenceManagement" as IEvidenceManagementPort
+interface "IAuditLogging" as IAuditLoggingPort
+interface "IMessageBroker" as IMessageBrokerPort
+interface "INotificationChannel" as INotificationChannelPort
+interface "IIdentityAccessManagement" as IIAMPort
+
+component "Alert Management Bounded Context" as AlertBC {
+
+  component "Interface Layer" as InterfaceLayer {
+    component "AlertController" as AlertController
+    component "AlertEventConsumer" as AlertEventConsumer <<consumer>>
+  }
+
+  component "Application Layer" as ApplicationLayer {
+    component "CreateAlertUseCase" as CreateAlertUseCase
+    component "DispatchAlertUseCase" as DispatchAlertUseCase
+  }
+
+  component "Domain Layer" as DomainLayer {
+    component "Alert" as Alert <<aggregate root>>
+    interface "AlertRepository" as AlertRepository <<repository>>
+  }
+
+  component "Infrastructure Layer" as InfrastructureLayer {
+    component "PostgresAlertRepository" as PostgresAlertRepository <<adapter>>
+    component "NotificationAdapter" as NotificationAdapter <<notification>>
+  }
+}
+
+AlertController -- IAlertManagement
+AlertEventConsumer -- IAlertEventReceiver
+Frontend --( IAlertManagement
+IncidentDetection --( IAlertEventReceiver
+ReportGeneration --( IAlertEventReceiver
+EvidenceManagement --( IAlertEventReceiver
+
+AlertEventConsumer --> CreateAlertUseCase : invokes
+CreateAlertUseCase --> AlertRepository : uses
+DispatchAlertUseCase --> NotificationAdapter : uses
+
+PostgresAlertRepository ..|> AlertRepository : implements
+PostgresAlertRepository --> RelationalDatabase : accesses
+
+Users -- IUsersPort
+Exams -- IExamsPort
+IncidentDetection -- IIncidentDetectionPort
+EvidenceManagement -- IEvidenceManagementPort
+AuditLogging -- IAuditLoggingPort
+MessageBroker -- IMessageBrokerPort
+EmailService -- INotificationChannelPort
+IAM -- IIAMPort
+NotificationAdapter --( INotificationChannelPort
+InfrastructureLayer --( IUsersPort
+InfrastructureLayer --( IExamsPort
+InfrastructureLayer --( IIncidentDetectionPort
+InfrastructureLayer --( IEvidenceManagementPort
+InfrastructureLayer --( IAuditLoggingPort
+InfrastructureLayer --( IMessageBrokerPort
+InfrastructureLayer --( IIAMPort
+
+@enduml
